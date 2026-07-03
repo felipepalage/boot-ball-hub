@@ -17,25 +17,89 @@ interface MyChallengeCardProps {
   onCancelarDesafio: (desafioId: string) => void;
 }
 
-const parseScorers = (value: string) =>
-  value
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [nomeAutor, quantidade] = line.split(':');
-      return {
-        nomeAutor: (nomeAutor ?? '').trim(),
-        quantidadeGols: Number((quantidade ?? '1').trim()),
-      };
-    })
-    .filter((item) => item.nomeAutor && Number.isFinite(item.quantidadeGols) && item.quantidadeGols > 0);
+type ScorerRow = { nomeAutor: string; quantidadeGols: number };
 
-const toTextareaValue = (items: Desafio['gols'], timeId?: string | null) =>
+const golsToRows = (items: Desafio['gols'], timeId?: string | null): ScorerRow[] =>
   items
     .filter((item) => item.timeId === timeId)
-    .map((item) => `${item.nomeAutor}:${item.quantidadeGols}`)
-    .join('\n');
+    .map((item) => ({ nomeAutor: item.nomeAutor, quantidadeGols: item.quantidadeGols }));
+
+const ScorersEditor = ({
+  label,
+  rows,
+  onChange,
+  placarEsperado,
+}: {
+  label: string;
+  rows: ScorerRow[];
+  onChange: (rows: ScorerRow[]) => void;
+  placarEsperado: number;
+}) => {
+  const total = rows.reduce((s, r) => s + (Number.isFinite(r.quantidadeGols) ? r.quantidadeGols : 0), 0);
+  const bate = total === placarEsperado;
+  const update = (i: number, patch: Partial<ScorerRow>) =>
+    onChange(rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-background/40 p-3">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
+        <span className={`text-xs font-bold ${bate ? 'text-emerald-400' : 'text-amber-400'}`}>
+          {total}/{placarEsperado} gols
+        </span>
+      </div>
+
+      <div className="space-y-2">
+        {rows.length === 0 && <p className="text-xs text-muted-foreground">Nenhum artilheiro ainda.</p>}
+        {rows.map((r, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <input
+              value={r.nomeAutor}
+              onChange={(e) => update(i, { nomeAutor: e.target.value })}
+              placeholder="Nome do jogador"
+              className="min-w-0 flex-1 rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary"
+            />
+            <div className="flex shrink-0 items-center gap-1 rounded-xl border border-border bg-background">
+              <button
+                type="button"
+                onClick={() => update(i, { quantidadeGols: Math.max(1, r.quantidadeGols - 1) })}
+                className="px-2.5 py-1.5 text-lg font-bold text-muted-foreground transition hover:text-foreground"
+                aria-label="Menos um gol"
+              >
+                −
+              </button>
+              <span className="w-5 text-center text-sm font-black text-foreground">{r.quantidadeGols}</span>
+              <button
+                type="button"
+                onClick={() => update(i, { quantidadeGols: r.quantidadeGols + 1 })}
+                className="px-2.5 py-1.5 text-lg font-bold text-muted-foreground transition hover:text-foreground"
+                aria-label="Mais um gol"
+              >
+                +
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => onChange(rows.filter((_, idx) => idx !== i))}
+              className="shrink-0 rounded-xl px-2 py-2 text-sm text-muted-foreground transition hover:text-rose-400"
+              aria-label="Remover artilheiro"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => onChange([...rows, { nomeAutor: '', quantidadeGols: 1 }])}
+        className="mt-2 w-full rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground transition hover:bg-secondary"
+      >
+        + Adicionar artilheiro
+      </button>
+    </div>
+  );
+};
 
 export const MyChallengeCard = ({
   desafio,
@@ -48,8 +112,8 @@ export const MyChallengeCard = ({
 }: MyChallengeCardProps) => {
   const [placarCriador, setPlacarCriador] = useState('');
   const [placarDesafiante, setPlacarDesafiante] = useState('');
-  const [golsCriador, setGolsCriador] = useState('');
-  const [golsDesafiante, setGolsDesafiante] = useState('');
+  const [golsCriador, setGolsCriador] = useState<ScorerRow[]>([]);
+  const [golsDesafiante, setGolsDesafiante] = useState<ScorerRow[]>([]);
   const [showMvp, setShowMvp] = useState(false);
 
   useEffect(() => {
@@ -58,8 +122,8 @@ export const MyChallengeCard = ({
 
     setPlacarCriador(nextCriador === '' ? '' : String(nextCriador));
     setPlacarDesafiante(nextDesafiante === '' ? '' : String(nextDesafiante));
-    setGolsCriador(toTextareaValue(desafio.gols, desafio.timeCriadorId));
-    setGolsDesafiante(toTextareaValue(desafio.gols, desafio.timeDesafianteId));
+    setGolsCriador(golsToRows(desafio.gols, desafio.timeCriadorId));
+    setGolsDesafiante(golsToRows(desafio.gols, desafio.timeDesafianteId));
   }, [desafio]);
 
   const canConfirm =
@@ -89,10 +153,15 @@ export const MyChallengeCard = ({
     onRegistrarResultado(desafio.id, criador, desafiante);
   };
 
+  const cleanRows = (rows: ScorerRow[]) =>
+    rows
+      .map((r) => ({ nomeAutor: r.nomeAutor.trim(), quantidadeGols: r.quantidadeGols }))
+      .filter((r) => r.nomeAutor && Number.isFinite(r.quantidadeGols) && r.quantidadeGols > 0);
+
   const handleScorers = () => {
     onRegistrarArtilheiros(desafio.id, {
-      golsCriador: parseScorers(golsCriador),
-      golsDesafiante: parseScorers(golsDesafiante),
+      golsCriador: cleanRows(golsCriador),
+      golsDesafiante: cleanRows(golsDesafiante),
     });
   };
 
@@ -221,16 +290,22 @@ export const MyChallengeCard = ({
       {canRegisterScorers && (
         <div className="mt-5 rounded-2xl border border-white/10 bg-secondary/50 p-4">
           <p className="text-sm font-semibold text-foreground">Artilheiros da partida</p>
-          <p className="mt-1 text-xs text-muted-foreground">Use uma linha por atleta no formato `Nome:quantidade`.</p>
-          <div className="mt-3 grid gap-3 md:grid-cols-2">
-            <div>
-              <label className="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-foreground">{desafio.timeCriador}</label>
-              <textarea value={golsCriador} onChange={(event) => setGolsCriador(event.target.value)} rows={4} className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary" />
-            </div>
-            <div>
-              <label className="mb-2 block text-xs uppercase tracking-[0.2em] text-muted-foreground">{desafio.timeDesafiante}</label>
-              <textarea value={golsDesafiante} onChange={(event) => setGolsDesafiante(event.target.value)} rows={4} className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary" />
-            </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Adicione cada jogador e ajuste os gols no contador. O total deve bater com o placar.
+          </p>
+          <div className="mt-3 grid gap-4 md:grid-cols-2">
+            <ScorersEditor
+              label={desafio.timeCriador}
+              rows={golsCriador}
+              onChange={setGolsCriador}
+              placarEsperado={desafio.placarCriador ?? 0}
+            />
+            <ScorersEditor
+              label={desafio.timeDesafiante ?? 'Desafiante'}
+              rows={golsDesafiante}
+              onChange={setGolsDesafiante}
+              placarEsperado={desafio.placarDesafiante ?? 0}
+            />
           </div>
           <button onClick={handleScorers} disabled={loading} className="mt-4 w-full rounded-2xl border border-white/10 px-4 py-3 text-sm font-bold uppercase tracking-[0.18em] text-foreground transition hover:bg-secondary disabled:opacity-50">
             {loading ? 'Salvando artilheiros...' : 'Salvar artilheiros'}
