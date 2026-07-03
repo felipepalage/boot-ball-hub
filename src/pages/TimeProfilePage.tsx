@@ -12,6 +12,8 @@ import {
 import { SkeletonCard } from '@/components/SkeletonCard';
 import { TeamCrest } from '@/components/TeamCrest';
 import { CrestBuilder } from '@/components/CrestBuilder';
+import { ConquistasTime } from '@/components/ConquistasTime';
+import { RivaisTime } from '@/components/RivaisTime';
 import { desafioService } from '@/services/desafioService';
 import { timeService } from '@/services/timeService';
 import { jogadorService } from '@/services/jogadorService';
@@ -249,6 +251,14 @@ const TimeProfilePage = () => {
             </div>
           )}
         </section>
+      )}
+
+      {/* ── Gamificação: conquistas + confrontos diretos ── */}
+      {time && (
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          <ConquistasTime timeId={time.id} />
+          <RivaisTime timeId={time.id} />
+        </div>
       )}
 
       {/* ── Edit panel ── */}
