@@ -15,7 +15,10 @@ export const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-background/85 backdrop-blur-xl">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-background/85 backdrop-blur-xl"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-1 overflow-x-auto px-2 sm:justify-around">
         {navItems.map(({ to, icon: Icon, label }) => {
           const active = location.pathname === to;

@@ -42,12 +42,17 @@
 
   html {
     scroll-behavior: smooth;
+    /* Evita o iOS reescalar o texto ao rotacionar e limita rolagem horizontal */
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Barlow Semi Condensed', system-ui, sans-serif;
     min-height: 100vh;
+    min-height: 100dvh; /* iOS Safari: desconta a barra de endereço dinâmica */
+    overflow-x: hidden;
     background-image:
       radial-gradient(circle at top left, rgba(239, 68, 68, 0.12), transparent 20%),
       radial-gradient(circle at top right, rgba(255, 255, 255, 0.07), transparent 16%),
@@ -56,6 +61,18 @@
 
   #root {
     min-height: 100vh;
+    min-height: 100dvh;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* iOS dá zoom automático ao focar inputs com fonte < 16px. Força 16px no mobile. */
+  @media (max-width: 640px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
   }
 }
 
