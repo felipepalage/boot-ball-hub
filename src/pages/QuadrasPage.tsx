@@ -301,7 +301,7 @@ const QuadrasPage = () => {
       {/* Avaliação modal */}
       {showAvaliarId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-[2rem] border border-white/10 bg-card p-6 space-y-4">
+          <div className="max-h-[90dvh] w-full max-w-sm overflow-y-auto rounded-[2rem] border border-white/10 bg-card p-6 space-y-4">
             <div className="flex items-center justify-between">
               <p className="font-bold text-foreground">Avaliar quadra</p>
               <button onClick={() => setShowAvaliarId(null)} className="rounded-xl p-2 text-muted-foreground hover:bg-secondary">

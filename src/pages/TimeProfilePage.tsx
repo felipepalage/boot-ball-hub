@@ -299,7 +299,7 @@ const TimeProfilePage = () => {
       {/* ── Delete confirm ── */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-[2rem] border border-red-500/30 bg-card p-6 shadow-xl">
+          <div className="max-h-[90dvh] w-full max-w-sm overflow-y-auto rounded-[2rem] border border-red-500/30 bg-card p-6 shadow-xl">
             <div className="flex items-center gap-3 mb-4">
               <AlertTriangle size={22} className="text-red-400 shrink-0" />
               <h2 className="text-lg font-black text-foreground">Apagar time</h2>

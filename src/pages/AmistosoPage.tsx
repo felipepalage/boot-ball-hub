@@ -501,7 +501,7 @@ const GolModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={onClose}>
       <div
-        className="w-full max-w-md rounded-3xl border border-white/10 bg-[#0b0b0b] p-6"
+        className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-3xl border border-white/10 bg-[#0b0b0b] p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="mb-4 text-lg font-black text-white">Registrar gol ⚽</h3>

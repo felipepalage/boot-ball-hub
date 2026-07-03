@@ -39,7 +39,7 @@ export const MvpVotingModal = ({ desafioId, timeCriador, timeDesafiante, onClose
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-card shadow-2xl">
+      <div className="max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-3xl border border-white/10 bg-card shadow-2xl">
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
           <div className="flex items-center gap-2">
             <Trophy size={16} className="text-yellow-400" />
