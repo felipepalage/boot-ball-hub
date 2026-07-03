@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { authService } from '@/services/authService';
-import { authStorage } from '@/lib/auth';
 
 const schema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -33,20 +32,6 @@ const LoginPage = () => {
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Credenciais inválidas.'));
     }
-  };
-
-  const entrarDemo = () => {
-    authStorage.setToken('demo-token');
-    authStorage.setUser({
-      id: '00000000-0000-0000-0000-000000000001',
-      nome: 'Felipe (Demo)',
-      email: 'demo@boleiroffice.dev',
-      empresaId: '00000000-0000-0000-0000-000000000009',
-      empresaNome: 'Empresa Demo',
-      isAdmin: true,
-    });
-    toast.success('Entrando em modo demo (sem backend).');
-    navigate('/');
   };
 
   if (isAuthenticated) {
@@ -99,14 +84,6 @@ const LoginPage = () => {
               {isSubmitting ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
-
-          <button
-            type="button"
-            onClick={entrarDemo}
-            className="mt-3 w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white/10"
-          >
-            Entrar em modo demo
-          </button>
 
           <p className="mt-6 text-center text-sm text-white/60">
             Ainda não tem conta?{' '}
