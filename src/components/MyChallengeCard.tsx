@@ -1,8 +1,11 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
 import type { Desafio } from '@/types';
 import { DesafioStatus } from '@/types';
-import { CalendarDays, Clock3, Share2, Swords, Trophy } from 'lucide-react';
+import { CalendarDays, Clock3, Share2, Sparkles, Swords, Trophy } from 'lucide-react';
+import { toast } from 'sonner';
 import { MatchResultCard } from '@/components/MatchResultCard';
+import { iaService } from '@/services/iaService';
+import { getApiErrorMessage } from '@/lib/api-error';
 import { formatDate, formatTime, getStatusClasses, getStatusLabel } from '@/lib/formatters';
 import { PresencaPanel } from '@/components/PresencaPanel';
 import { MvpVotingModal } from '@/components/MvpVotingModal';
@@ -117,6 +120,25 @@ export const MyChallengeCard = ({
   const [golsDesafiante, setGolsDesafiante] = useState<ScorerRow[]>([]);
   const [showMvp, setShowMvp] = useState(false);
   const [showCard, setShowCard] = useState(false);
+  const [narracao, setNarracao] = useState<string | null>(null);
+  const [narrando, setNarrando] = useState(false);
+
+  const gerarNarracao = async () => {
+    setNarrando(true);
+    try {
+      const texto = await iaService.gerarNarracao({
+        titulo: `${desafio.timeCriador} x ${desafio.timeDesafiante ?? 'Adversário'}`,
+        placar: `${desafio.placarCriador ?? 0} x ${desafio.placarDesafiante ?? 0}`,
+        artilheiros: (desafio.gols ?? []).map((g) => `${g.nomeAutor} (${g.quantidadeGols}) - ${g.time}`),
+        contexto: [desafio.local, desafio.bairro, formatDate(desafio.dataJogo)].filter(Boolean).join(' • '),
+      });
+      setNarracao(texto);
+    } catch (e) {
+      toast.error(getApiErrorMessage(e, 'Não foi possível gerar a narração.'));
+    } finally {
+      setNarrando(false);
+    }
+  };
 
   useEffect(() => {
     const nextCriador = desafio.placarCriadorProposto ?? desafio.placarCriador ?? '';
@@ -228,6 +250,17 @@ export const MyChallengeCard = ({
             <Share2 size={12} />
             {showCard ? 'Ocultar card' : 'Card do jogo'}
           </button>
+          <button
+            onClick={gerarNarracao}
+            disabled={narrando}
+            className="mt-3 ml-2 inline-flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary transition hover:bg-primary/20 disabled:opacity-50"
+          >
+            <Sparkles size={12} />
+            {narrando ? 'Gerando...' : 'Narração IA'}
+          </button>
+          {narracao && (
+            <p className="mt-3 rounded-xl bg-black/30 p-3 text-sm italic text-foreground/80">“{narracao}”</p>
+          )}
           {showCard && <MatchResultCard desafio={desafio} />}
         </div>
       )}
