@@ -38,7 +38,7 @@ export default function CalendarioPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-32 pt-6">
+    <div className="min-h-dvh bg-background pb-32 pt-6">
       <div className="mx-auto max-w-2xl px-4">
         <div className="mb-6 flex items-center gap-3">
           <CalendarDays size={22} className="text-primary" />

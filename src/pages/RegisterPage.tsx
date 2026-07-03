@@ -81,7 +81,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(239,68,68,0.22),transparent_20%),linear-gradient(180deg,#09090b_0%,#111827_45%,#050505_100%)] px-4 py-10">
+    <div className="min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(239,68,68,0.22),transparent_20%),linear-gradient(180deg,#09090b_0%,#111827_45%,#050505_100%)] px-4 py-10">
       <div className="mx-auto grid min-h-[calc(100dvh-5rem)] max-w-6xl items-center gap-10 lg:grid-cols-[1.05fr_460px]">
         <section className="hidden lg:block">
           <p className="text-xs uppercase tracking-[0.34em] text-white/55">Cadastro corporativo</p>

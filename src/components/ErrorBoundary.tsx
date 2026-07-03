@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
       if (this.props.fallback) return this.props.fallback;
 
       return (
-        <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
+        <div className="flex min-h-dvh items-center justify-center bg-zinc-950 px-4">
           <div className="max-w-md text-center">
             <p className="text-5xl">⚽</p>
             <h1 className="mt-4 text-2xl font-black text-white">Algo deu errado</h1>
