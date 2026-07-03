@@ -1,7 +1,8 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
 import type { Desafio } from '@/types';
 import { DesafioStatus } from '@/types';
-import { CalendarDays, Clock3, Swords, Trophy } from 'lucide-react';
+import { CalendarDays, Clock3, Share2, Swords, Trophy } from 'lucide-react';
+import { MatchResultCard } from '@/components/MatchResultCard';
 import { formatDate, formatTime, getStatusClasses, getStatusLabel } from '@/lib/formatters';
 import { PresencaPanel } from '@/components/PresencaPanel';
 import { MvpVotingModal } from '@/components/MvpVotingModal';
@@ -115,6 +116,7 @@ export const MyChallengeCard = ({
   const [golsCriador, setGolsCriador] = useState<ScorerRow[]>([]);
   const [golsDesafiante, setGolsDesafiante] = useState<ScorerRow[]>([]);
   const [showMvp, setShowMvp] = useState(false);
+  const [showCard, setShowCard] = useState(false);
 
   useEffect(() => {
     const nextCriador = desafio.placarCriadorProposto ?? desafio.placarCriador ?? '';
@@ -219,6 +221,14 @@ export const MyChallengeCard = ({
             <Trophy size={12} />
             Votar no MVP
           </button>
+          <button
+            onClick={() => setShowCard((v) => !v)}
+            className="mt-3 ml-2 inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-white/10"
+          >
+            <Share2 size={12} />
+            {showCard ? 'Ocultar card' : 'Card do jogo'}
+          </button>
+          {showCard && <MatchResultCard desafio={desafio} />}
         </div>
       )}
       {showMvp && (
