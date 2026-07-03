@@ -6,6 +6,7 @@ import { authService } from '@/services/authService';
 import { amistosoService, type JogadorAmistoso, type PartidaAmistoso, type TimeAmistoso } from '@/services/amistosoService';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { FlyerDoDia } from '@/components/FlyerDoDia';
+import { useAmistosoLive } from '@/hooks/useAmistosoLive';
 
 type Tab = 'geral' | 'times' | 'rachao' | 'pagamentos';
 
@@ -268,6 +269,18 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
   const { data: resumo } = useQuery({
     queryKey: ['amistoso', 'resumo-dia'],
     queryFn: () => amistosoService.getResumoDia(),
+  });
+
+  // Placar ao vivo: recarrega a partida quando outro dispositivo registra gol/finaliza
+  useAmistosoLive((e) => {
+    if (partida && e.partidaId === partida.id) {
+      amistosoService.getPartida(partida.id).then(setPartida).catch(() => {});
+      if (e.finalizada) {
+        queryClient.invalidateQueries({ queryKey: ['amistoso', 'artilheiros'] });
+        queryClient.invalidateQueries({ queryKey: ['amistoso', 'garcons'] });
+        queryClient.invalidateQueries({ queryKey: ['amistoso', 'resumo-dia'] });
+      }
+    }
   });
 
   // Restaura partida ativa do localStorage
