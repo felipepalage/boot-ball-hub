@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Plus, Trash2, Trophy, Users, Shuffle, Timer } from 'lucide-react';
 import { authService } from '@/services/authService';
-import { amistosoService, type JogadorAmistoso, type PartidaAmistoso } from '@/services/amistosoService';
+import { amistosoService, type JogadorAmistoso, type PartidaAmistoso, type TimeAmistoso } from '@/services/amistosoService';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { FlyerDoDia } from '@/components/FlyerDoDia';
 
@@ -253,6 +253,10 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
     queryKey: ['amistoso', 'jogadores'],
     queryFn: amistosoService.getJogadores,
   });
+  const { data: times = [] } = useQuery({
+    queryKey: ['amistoso', 'times'],
+    queryFn: amistosoService.getTimes,
+  });
   const { data: artilheiros = [] } = useQuery({
     queryKey: ['amistoso', 'artilheiros'],
     queryFn: amistosoService.getArtilheiros,
@@ -414,6 +418,7 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
         <GolModal
           partida={partida}
           jogadores={jogadores}
+          times={times}
           onClose={() => setGolOpen(false)}
           onConfirm={(payload) => golMut.mutate(payload)}
           pending={golMut.isPending}
@@ -459,12 +464,14 @@ const RankingCard = ({
 const GolModal = ({
   partida,
   jogadores,
+  times,
   onClose,
   onConfirm,
   pending,
 }: {
   partida: PartidaAmistoso;
   jogadores: JogadorAmistoso[];
+  times: TimeAmistoso[];
   onClose: () => void;
   onConfirm: (p: { timeNumero: number; autorNome: string; assistenteNome?: string | null }) => void;
   pending: boolean;
@@ -472,7 +479,24 @@ const GolModal = ({
   const [timeNumero, setTimeNumero] = useState(1);
   const [autor, setAutor] = useState('');
   const [assist, setAssist] = useState('');
-  const nomes = useMemo(() => jogadores.map((j) => j.nome), [jogadores]);
+
+  const timeNome = timeNumero === 1 ? partida.time1Nome : partida.time2Nome;
+
+  // Jogadores do time selecionado (casando pelo nome do time sorteado).
+  // Se o time não foi sorteado / não bater, cai pro elenco completo como fallback.
+  const jogadoresDoTime = useMemo(() => {
+    const t = times.find((x) => x.nome === timeNome);
+    return t && t.jogadores.length ? t.jogadores : jogadores.map((j) => j.nome);
+  }, [times, timeNome, jogadores]);
+
+  // Ao trocar de time, limpa a seleção (o jogador é de outro time).
+  useEffect(() => {
+    setAutor('');
+    setAssist('');
+  }, [timeNumero]);
+
+  const selectClass =
+    'mb-4 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-2.5 text-white focus:border-primary focus:outline-none';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={onClose}>
@@ -498,28 +522,26 @@ const GolModal = ({
         </div>
 
         <label className="mb-1 block text-xs uppercase tracking-widest text-white/40">Quem fez o gol</label>
-        <input
-          list="jog-list"
-          value={autor}
-          onChange={(e) => setAutor(e.target.value)}
-          placeholder="Nome do artilheiro"
-          className="mb-4 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-2.5 text-white placeholder:text-white/30 focus:border-primary focus:outline-none"
-        />
+        <select value={autor} onChange={(e) => setAutor(e.target.value)} className={selectClass}>
+          <option value="">Selecione o jogador</option>
+          {jogadoresDoTime.map((n) => (
+            <option key={n} value={n}>
+              {n}
+            </option>
+          ))}
+        </select>
 
         <label className="mb-1 block text-xs uppercase tracking-widest text-white/40">Assistência (opcional)</label>
-        <input
-          list="jog-list"
-          value={assist}
-          onChange={(e) => setAssist(e.target.value)}
-          placeholder="Nome do garçom"
-          className="mb-5 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-2.5 text-white placeholder:text-white/30 focus:border-primary focus:outline-none"
-        />
-
-        <datalist id="jog-list">
-          {nomes.map((n) => (
-            <option key={n} value={n} />
-          ))}
-        </datalist>
+        <select value={assist} onChange={(e) => setAssist(e.target.value)} className={selectClass}>
+          <option value="">Ninguém / não registrar</option>
+          {jogadoresDoTime
+            .filter((n) => n !== autor)
+            .map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+        </select>
 
         <div className="flex gap-3">
           <button
