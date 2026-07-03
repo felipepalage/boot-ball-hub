@@ -89,7 +89,7 @@ export const MatchResultCard = ({ desafio }: MatchResultCardProps) => {
       for (const g of gols) {
         ctx.fillStyle = '#ffffff';
         ctx.font = '700 44px Arial';
-        const txt = `⚽ ${g.nomeAutor} (${g.quantidadeGols}) — ${g.nomeTime}`;
+        const txt = `⚽ ${g.nomeAutor} (${g.quantidadeGols}) — ${g.time}`;
         ctx.fillText(truncate(ctx, txt, W - 200), 140, y);
         y += 76;
       }

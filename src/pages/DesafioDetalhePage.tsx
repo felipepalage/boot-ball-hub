@@ -171,9 +171,9 @@ const DesafioDetalhePage = () => {
           <div className="mt-5 border-t border-white/10 pt-4">
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Artilheiros</p>
             <div className="flex flex-wrap gap-2">
-              {desafio.gols.map((g: { id: string; nomeAutor: string; quantidadeGols: number; nomeTime: string }) => (
+              {desafio.gols.map((g) => (
                 <span key={g.id} className="rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-xs text-foreground">
-                  ⚽ {g.nomeAutor} ({g.quantidadeGols}) — {g.nomeTime}
+                  ⚽ {g.nomeAutor} ({g.quantidadeGols}) — {g.time}
                 </span>
               ))}
             </div>
