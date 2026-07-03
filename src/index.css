@@ -1,0 +1,85 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 225 27% 7%;
+    --foreground: 0 0% 98%;
+    --card: 226 24% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 226 24% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 357 79% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 223 21% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 225 16% 18%;
+    --muted-foreground: 215 15% 69%;
+    --accent: 357 79% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 44%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 14% 22%;
+    --input: 220 14% 22%;
+    --ring: 357 79% 48%;
+    --radius: 1rem;
+    --sidebar-background: 225 27% 7%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 357 79% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 223 21% 16%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 220 14% 22%;
+    --sidebar-ring: 357 79% 48%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Barlow Semi Condensed', system-ui, sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at top left, rgba(239, 68, 68, 0.12), transparent 20%),
+      radial-gradient(circle at top right, rgba(255, 255, 255, 0.07), transparent 16%),
+      linear-gradient(180deg, rgba(3, 7, 18, 1) 0%, rgba(15, 23, 42, 1) 44%, rgba(5, 5, 5, 1) 100%);
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(220, 38, 38, 0.5);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 38, 38, 0.85);
+}
