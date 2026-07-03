@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { authService } from '@/services/authService';
 import { notificacaoService } from '@/services/notificacaoService';
+import { requestNotificationPermission, showOsNotification } from '@/lib/push';
 
 export interface AppNotification {
   tipo: string;
@@ -56,10 +57,12 @@ export const useNotifications = () => {
       const withId = { ...notification, id: crypto.randomUUID(), lida: false };
       setNotifications((prev) => [withId, ...prev].slice(0, 50));
       setUnreadCount((prev) => prev + 1);
+      showOsNotification(notification.titulo, notification.mensagem, notification.url);
     });
 
     const start = async () => {
       try {
+        await requestNotificationPermission();
         await connection.start();
         await connection.invoke('JoinGroup', user.empresaId);
       } catch {
