@@ -11,6 +11,7 @@ import { desafioService } from '@/services/desafioService';
 import { empresaService } from '@/services/empresaService';
 import { DesafioStatus } from '@/types';
 import { toast } from 'sonner';
+import { fireConfetti } from '@/lib/celebrate';
 
 const HomePage = () => {
   const currentUser = authService.getCurrentUser();
@@ -82,6 +83,7 @@ const HomePage = () => {
     mutationFn: ({ desafioId, placarCriador, placarDesafiante }: { desafioId: string; placarCriador: number; placarDesafiante: number }) =>
       desafioService.confirmarResultado(desafioId, { placarCriador, placarDesafiante }),
     onSuccess: () => {
+      fireConfetti();
       toast.success('Resultado confirmado e salvo no ranking.');
       queryClient.invalidateQueries({ queryKey: ['desafios-time'] });
       queryClient.invalidateQueries({ queryKey: ['feed-jogos'] });

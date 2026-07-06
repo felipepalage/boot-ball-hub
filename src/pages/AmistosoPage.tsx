@@ -7,6 +7,7 @@ import { amistosoService, type JogadorAmistoso, type PartidaAmistoso, type TimeA
 import { getApiErrorMessage } from '@/lib/api-error';
 import { FlyerDoDia } from '@/components/FlyerDoDia';
 import { useAmistosoLive } from '@/hooks/useAmistosoLive';
+import { fireConfetti, playGoalSound } from '@/lib/celebrate';
 
 type Tab = 'geral' | 'times' | 'rachao' | 'pagamentos';
 
@@ -333,6 +334,8 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
     onSuccess: (p) => {
       setPartida(p);
       setGolOpen(false);
+      fireConfetti();
+      playGoalSound();
       toast.success('GOOOL! ⚽');
     },
     onError: (e) => toast.error(getApiErrorMessage(e, 'Algo deu errado. Tente novamente.')),
@@ -341,6 +344,7 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
   const finalizarMut = useMutation({
     mutationFn: () => amistosoService.finalizarPartida(partida!.id, elapsed),
     onSuccess: () => {
+      fireConfetti(220, 2400);
       toast.success('Partida finalizada e salva!');
       localStorage.removeItem(PARTIDA_KEY);
       setPartida(null);
