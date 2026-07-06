@@ -81,7 +81,7 @@ const LandingPage = () => {
                 <Trophy className="text-primary" size={28} />
               </div>
               <div className="space-y-2">
-                {topTimes.length === 0 && <p className="py-8 text-center text-sm text-white/45">Ranking carregando...</p>}
+                {topTimes.length === 0 && ranking.isLoading && <p className="py-8 text-center text-sm text-white/45">Carregando...</p>}
                 {topTimes.map((item, index) => (
                   <Link key={item.timeId} to="/ranking" className="flex items-center gap-3 border border-white/8 bg-white/[0.035] px-3 py-2 transition hover:bg-white/[0.06]">
                     <span className="w-6 text-center text-sm font-black text-primary">{index + 1}</span>
@@ -107,7 +107,7 @@ const LandingPage = () => {
                     <p className="truncate text-xs text-white/45">{item.time} - {item.gols} gols</p>
                   </Link>
                 ))}
-                {topScorers.length === 0 && <p className="text-sm text-white/45">Artilharia carregando...</p>}
+                {topScorers.length === 0 && artilheiros.isLoading && <p className="text-sm text-white/45">Carregando...</p>}
               </div>
             </div>
           </div>
