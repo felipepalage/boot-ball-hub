@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, Target, Calendar, Flame, Star } from 'lucide-react';
 import { jogadorService } from '@/services/jogadorService';
 import { TeamCrest } from '@/components/TeamCrest';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const StatCard = ({ label, value, sub }: { label: string; value: string | number; sub?: string }) => (
   <div className="rounded-2xl border border-white/10 bg-card p-4 text-center">
@@ -20,6 +21,8 @@ const JogadorPerfilPage = () => {
     queryFn: () => jogadorService.getPerfil(id!),
     enabled: !!id,
   });
+
+  useDocumentTitle(jogador?.nome);
 
   if (isLoading) {
     return (

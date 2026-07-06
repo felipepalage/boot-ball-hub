@@ -14,6 +14,7 @@ import { TeamCrest } from '@/components/TeamCrest';
 import { CrestBuilder } from '@/components/CrestBuilder';
 import { ConquistasTime } from '@/components/ConquistasTime';
 import { RivaisTime } from '@/components/RivaisTime';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { desafioService } from '@/services/desafioService';
 import { timeService } from '@/services/timeService';
 import { jogadorService } from '@/services/jogadorService';
@@ -175,6 +176,7 @@ const TimeProfilePage = () => {
   const streak = time ? calcStreak(allDesafios, timeId) : null;
   const badges = time ? calcBadges(allDesafios, timeId) : [];
   const jogadores = time?.jogadores ?? [];
+  useDocumentTitle(time?.nome);
 
   const streakLabel = streak?.tipo === 'V' ? `${streak.quantidade} vitória${streak.quantidade > 1 ? 's' : ''} seguida${streak.quantidade > 1 ? 's' : ''}`
     : streak?.tipo === 'D' ? `${streak.quantidade} derrota${streak.quantidade > 1 ? 's' : ''} seguida${streak.quantidade > 1 ? 's' : ''}`
