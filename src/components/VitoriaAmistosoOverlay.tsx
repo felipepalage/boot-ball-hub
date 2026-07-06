@@ -1,9 +1,6 @@
-import { useMemo, useState } from 'react';
-import { Trophy, Sparkles, X } from 'lucide-react';
+import { useMemo } from 'react';
+import { Trophy, X } from 'lucide-react';
 import type { PartidaAmistoso } from '@/services/amistosoService';
-import { iaService } from '@/services/iaService';
-import { getApiErrorMessage } from '@/lib/api-error';
-import { toast } from 'sonner';
 
 interface VitoriaAmistosoOverlayProps {
   partida: PartidaAmistoso;
@@ -11,9 +8,6 @@ interface VitoriaAmistosoOverlayProps {
 }
 
 export const VitoriaAmistosoOverlay = ({ partida, onClose }: VitoriaAmistosoOverlayProps) => {
-  const [narracao, setNarracao] = useState<string | null>(null);
-  const [narrando, setNarrando] = useState(false);
-
   const vencedor =
     partida.time1Gols > partida.time2Gols
       ? partida.time1Nome
@@ -30,23 +24,6 @@ export const VitoriaAmistosoOverlay = ({ partida, onClose }: VitoriaAmistosoOver
     }
     return melhor;
   }, [partida]);
-
-  const gerar = async () => {
-    setNarrando(true);
-    try {
-      const texto = await iaService.gerarNarracao({
-        titulo: `${partida.time1Nome} x ${partida.time2Nome}`,
-        placar: `${partida.time1Gols} x ${partida.time2Gols}`,
-        artilheiros: partida.gols.map((g) => g.autorNome),
-        contexto: 'Rachão amistoso entre colegas de empresa',
-      });
-      setNarracao(texto);
-    } catch (e) {
-      toast.error(getApiErrorMessage(e, 'Não foi possível gerar a narração.'));
-    } finally {
-      setNarrando(false);
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
@@ -78,18 +55,6 @@ export const VitoriaAmistosoOverlay = ({ partida, onClose }: VitoriaAmistosoOver
               {craque.gols} gol{craque.gols !== 1 ? 's' : ''}
             </p>
           </div>
-        )}
-
-        {narracao ? (
-          <p className="mt-4 rounded-2xl bg-black/30 p-3 text-sm italic text-white/80">“{narracao}”</p>
-        ) : (
-          <button
-            onClick={gerar}
-            disabled={narrando}
-            className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-bold text-primary transition hover:bg-primary/20 disabled:opacity-50"
-          >
-            <Sparkles size={14} /> {narrando ? 'Gerando...' : 'Narração da partida (IA)'}
-          </button>
         )}
 
         <button
