@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+﻿import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,8 +8,8 @@ import { getApiErrorMessage } from '@/lib/api-error';
 import { authService } from '@/services/authService';
 
 const schema = z.object({
-  email: z.string().email('E-mail inválido'),
-  senha: z.string().min(1, 'Senha obrigatória'),
+  email: z.string().email('E-mail invÃ¡lido'),
+  senha: z.string().min(1, 'Senha obrigatÃ³ria'),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -28,14 +28,14 @@ const LoginPage = () => {
     try {
       await authService.login(data);
       toast.success('Login realizado com sucesso.');
-      navigate('/');
+      navigate('/app');
     } catch (error) {
-      toast.error(getApiErrorMessage(error, 'Credenciais inválidas.'));
+      toast.error(getApiErrorMessage(error, 'Credenciais invÃ¡lidas.'));
     }
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   return (
@@ -70,7 +70,7 @@ const LoginPage = () => {
               <input
                 type="password"
                 {...register('senha')}
-                placeholder="••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 focus:border-primary aria-invalid:border-red-500"
                 aria-invalid={!!errors.senha}
               />
@@ -86,14 +86,14 @@ const LoginPage = () => {
           </form>
 
           <p className="mt-6 text-center text-sm text-white/60">
-            Ainda não tem conta?{' '}
+            Ainda nÃ£o tem conta?{' '}
             <Link to="/register" className="font-semibold text-primary">
               Cadastre-se
             </Link>
           </p>
           <p className="mt-4 text-center text-xs text-white/35">
             <Link to="/termos" className="transition hover:text-white/60">Termos de Uso</Link>
-            {' · '}
+            {' Â· '}
             <Link to="/privacidade" className="transition hover:text-white/60">Privacidade</Link>
           </p>
         </section>

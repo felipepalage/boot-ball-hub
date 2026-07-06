@@ -89,7 +89,7 @@ const CriarDesafioPage = () => {
       }),
     onSuccess: () => {
       toast.success('Convite enviado com sucesso.');
-      navigate('/');
+      navigate('/app');
     },
     onError: (error) => {
       toast.error(getApiErrorMessage(error, 'Nao foi possivel criar o convite.'));

@@ -92,7 +92,7 @@ const DesafioDetalhePage = () => {
 
   return (
     <div className="mx-auto max-w-2xl px-4 pb-24 pt-6">
-      <Link to="/" className="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition">
+      <Link to="/app" className="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition">
         <ChevronLeft size={16} /> Voltar
       </Link>
 

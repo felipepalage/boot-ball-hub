@@ -3,6 +3,7 @@ import { api } from '@/lib/api';
 export interface RachaoConfirmacao {
   id: string;
   nome: string;
+  empresa?: string | null;
 }
 
 export interface RachaoEvento {
@@ -25,7 +26,7 @@ export interface RachaoPublico {
   horarioEvento: string;
   numeroTimes: number;
   sorteioFeito: boolean;
-  confirmados: string[];
+  confirmados: RachaoConfirmacao[];
   times: TimeSorteado[];
 }
 
@@ -42,8 +43,8 @@ export const rachaoService = {
     const { data } = await api.get<RachaoPublico>(`/rachao/publico/${token}`);
     return data;
   },
-  confirmar: async (token: string, nome: string) => {
-    const { data } = await api.post<RachaoPublico>(`/rachao/publico/${token}/confirmar`, { nome });
+  confirmar: async (token: string, nome: string, empresa: string) => {
+    const { data } = await api.post<RachaoPublico>(`/rachao/publico/${token}/confirmar`, { nome, empresa });
     return data;
   },
 };

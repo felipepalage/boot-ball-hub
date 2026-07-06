@@ -1,3 +1,4 @@
+﻿import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,16 +20,16 @@ const formatCnpj = (value: string) => {
 
 const schema = z.object({
   nome: z.string().min(2, 'Nome deve ter ao menos 2 caracteres'),
-  email: z.string().email('E-mail inválido'),
+  email: z.string().email('E-mail invÃ¡lido'),
   senha: z.string().min(6, 'Senha deve ter ao menos 6 caracteres'),
-  empresaNome: z.string().min(2, 'Nome da empresa obrigatório'),
+  empresaNome: z.string().min(2, 'Nome da empresa obrigatÃ³rio'),
   empresaCnpj: z
     .string()
     .transform(onlyDigits)
-    .refine((v) => v.length === 14, 'CNPJ deve ter 14 dígitos'),
-  empresaBairro: z.string().min(2, 'Bairro obrigatório'),
-  empresaCidade: z.string().min(2, 'Cidade obrigatória'),
-  empresaLogoUrl: z.string().url('URL inválida').optional().or(z.literal('')),
+    .refine((v) => v.length === 14, 'CNPJ deve ter 14 dÃ­gitos'),
+  empresaBairro: z.string().min(2, 'Bairro obrigatÃ³rio'),
+  empresaCidade: z.string().min(2, 'Cidade obrigatÃ³ria'),
+  empresaLogoUrl: z.string().url('URL invÃ¡lida').optional().or(z.literal('')),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -65,19 +66,42 @@ const RegisterPage = () => {
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
   const cnpjValue = watch('empresaCnpj') ?? '';
+  const [cnpjBuscado, setCnpjBuscado] = useState('');
+  const [buscandoCnpj, setBuscandoCnpj] = useState(false);
+
+  // Ao completar 14 dígitos, consulta a Receita (BrasilAPI) e autopreenche os campos.
+  useEffect(() => {
+    const digits = onlyDigits(cnpjValue);
+    if (digits.length !== 14 || digits === cnpjBuscado) return;
+    setCnpjBuscado(digits);
+    setBuscandoCnpj(true);
+    authService
+      .consultarCnpj(digits)
+      .then((info) => {
+        const nome = info.nomeFantasia || info.razaoSocial;
+        if (nome) setValue('empresaNome', nome, { shouldValidate: true });
+        if (info.cidade) setValue('empresaCidade', info.cidade, { shouldValidate: true });
+        if (info.bairro) setValue('empresaBairro', info.bairro, { shouldValidate: true });
+        toast.success('Dados da empresa preenchidos pelo CNPJ.');
+      })
+      .catch(() => {
+        /* Consulta é best-effort: se falhar, o usuário preenche manualmente. */
+      })
+      .finally(() => setBuscandoCnpj(false));
+  }, [cnpjValue, cnpjBuscado, setValue]);
 
   const onSubmit = async (data: FormValues) => {
     try {
       await authService.register({ ...data, empresaLogoUrl: data.empresaLogoUrl || undefined });
       toast.success('Conta criada com sucesso.');
-      navigate('/');
+      navigate('/app');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Nao foi possivel concluir o cadastro.'));
     }
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   return (
@@ -111,7 +135,7 @@ const RegisterPage = () => {
               <input type="text" {...register('empresaNome')} placeholder="Nome da empresa" className={inputClass} aria-invalid={!!errors.empresaNome} />
             </Field>
 
-            <Field label="CNPJ" error={errors.empresaCnpj?.message}>
+            <Field label={buscandoCnpj ? 'CNPJ · buscando dados…' : 'CNPJ'} error={errors.empresaCnpj?.message}>
               <input
                 type="text"
                 inputMode="numeric"
@@ -137,7 +161,7 @@ const RegisterPage = () => {
             </div>
 
             <Field label="Senha" error={errors.senha?.message}>
-              <input type="password" {...register('senha')} placeholder="••••••••" className={inputClass} aria-invalid={!!errors.senha} />
+              <input type="password" {...register('senha')} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" className={inputClass} aria-invalid={!!errors.senha} />
             </Field>
 
             <button
@@ -159,7 +183,7 @@ const RegisterPage = () => {
             </Link>
           </p>
           <p className="mt-4 text-center text-xs text-white/35">
-            Ao criar conta você concorda com os{' '}
+            Ao criar conta vocÃª concorda com os{' '}
             <Link to="/termos" className="transition hover:text-white/60">Termos</Link>
             {' e a '}
             <Link to="/privacidade" className="transition hover:text-white/60">Privacidade</Link>.

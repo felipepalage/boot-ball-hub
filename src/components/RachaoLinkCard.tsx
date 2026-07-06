@@ -116,7 +116,7 @@ export const RachaoLinkCard = () => {
             <div className="flex flex-wrap gap-2">
               {evento!.confirmados.length === 0 && <p className="text-sm text-muted-foreground">Ninguém confirmou ainda.</p>}
               {evento!.confirmados.map((c) => (
-                <span key={c.id} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-foreground">{c.nome}</span>
+                <span key={c.id} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-foreground">{c.nome}{c.empresa ? ` - ${c.empresa}` : ''}</span>
               ))}
             </div>
           </div>

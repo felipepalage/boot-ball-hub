@@ -2,7 +2,7 @@
 import { Home, Newspaper, Trophy, Users, CalendarDays, Target, Volleyball, BarChart3 } from 'lucide-react';
 
 const navItems = [
-  { to: '/', icon: Home, label: 'Convites' },
+  { to: '/app', icon: Home, label: 'Convites' },
   { to: '/times', icon: Users, label: 'Times' },
   { to: '/amistoso', icon: Volleyball, label: 'Amistoso' },
   { to: '/agenda', icon: CalendarDays, label: 'Agenda' },

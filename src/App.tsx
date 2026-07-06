@@ -10,6 +10,7 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { authService } from '@/services/authService';
 
 // Rotas carregadas sob demanda (code-splitting) — reduz o bundle inicial.
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const TimesPage = lazy(() => import('./pages/TimesPage'));
 const FeedPage = lazy(() => import('./pages/FeedPage'));
@@ -67,6 +68,26 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
   </>
 );
 
+// Páginas públicas (ranking/artilharia): logado vê com a navbar do app;
+// deslogado vê num shell mínimo com logo + CTA de entrar/cadastrar.
+const PublicShell = ({ children }: { children: React.ReactNode }) => (
+  <div className="min-h-dvh bg-background">
+    <header className="sticky top-0 z-30 border-b border-white/5 bg-black/40 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <a href="/" className="text-sm font-black uppercase tracking-[0.2em] text-foreground">Boleiroffice</a>
+        <nav className="flex items-center gap-2">
+          <a href="/login" className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:text-foreground">Entrar</a>
+          <a href="/register" className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white transition hover:opacity-90">Cadastrar empresa</a>
+        </nav>
+      </div>
+    </header>
+    {children}
+  </div>
+);
+
+const PublicAppLayout = ({ children }: { children: React.ReactNode }) =>
+  authService.isAuthenticated() ? <AppLayout>{children}</AppLayout> : <PublicShell>{children}</PublicShell>;
+
 const App = () => (
   <ErrorBoundary>
   <QueryClientProvider client={queryClient}>
@@ -88,17 +109,18 @@ const App = () => (
           <Route path="/r/:token" element={<PublicoRachaoPage />} />
           <Route path="/times/:timeId/:slug?" element={<TimeProfilePage />} />
           <Route path="/empresas/:empresaId/:slug?" element={<EmpresaProfilePage />} />
-          <Route path="/" element={<ProtectedRoute><AppLayout><HomePage /></AppLayout></ProtectedRoute>} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/app" element={<ProtectedRoute><AppLayout><HomePage /></AppLayout></ProtectedRoute>} />
           <Route path="/times" element={<ProtectedRoute><AppLayout><TimesPage /></AppLayout></ProtectedRoute>} />
           <Route path="/feed" element={<ProtectedRoute><AppLayout><FeedPage /></AppLayout></ProtectedRoute>} />
-          <Route path="/ranking" element={<ProtectedRoute><AppLayout><RankingPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/ranking" element={<PublicAppLayout><RankingPage /></PublicAppLayout>} />
           <Route path="/desafios/novo" element={<ProtectedRoute><AppLayout><CriarDesafioPage /></AppLayout></ProtectedRoute>} />
           <Route path="/quadras" element={<ProtectedRoute><AppLayout><QuadrasPage /></AppLayout></ProtectedRoute>} />
           <Route path="/torneios" element={<ProtectedRoute><AppLayout><TorneiosPage /></AppLayout></ProtectedRoute>} />
           <Route path="/torneios/:id" element={<ProtectedRoute><AppLayout><TorneioDetalhePage /></AppLayout></ProtectedRoute>} />
           <Route path="/desafios/:id" element={<ProtectedRoute><AppLayout><DesafioDetalhePage /></AppLayout></ProtectedRoute>} />
           <Route path="/jogadores/:id/perfil" element={<AppLayout><JogadorPerfilPage /></AppLayout>} />
-          <Route path="/artilharia" element={<ProtectedRoute><AppLayout><ArtilhariaPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/artilharia" element={<PublicAppLayout><ArtilhariaPage /></PublicAppLayout>} />
           <Route path="/amistoso" element={<ProtectedRoute><AppLayout><AmistosoPage /></AppLayout></ProtectedRoute>} />
           <Route path="/estatisticas" element={<ProtectedRoute><AppLayout><EstatisticasPage /></AppLayout></ProtectedRoute>} />
           <Route path="/agenda" element={<ProtectedRoute><AppLayout><CalendarioPage /></AppLayout></ProtectedRoute>} />

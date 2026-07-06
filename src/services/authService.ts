@@ -21,6 +21,17 @@ export const authService = {
     persistAuth(data);
     return data;
   },
+  consultarCnpj: async (cnpj: string) => {
+    const { data } = await api.get<{
+      cnpj: string;
+      razaoSocial?: string | null;
+      nomeFantasia?: string | null;
+      cidade?: string | null;
+      bairro?: string | null;
+      uf?: string | null;
+    }>(`/auth/cnpj/${cnpj}`);
+    return data;
+  },
   logout: () => {
     authStorage.clear();
     window.location.assign('/login');

@@ -7,7 +7,7 @@ import { Navigate } from 'react-router-dom';
 export default function AdminPage() {
   const user = authService.getUser();
 
-  if (!user?.isAdmin) return <Navigate to="/" replace />;
+  if (!user?.isAdmin) return <Navigate to="/app" replace />;
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-stats'],
