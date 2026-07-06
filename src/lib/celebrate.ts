@@ -85,25 +85,62 @@ if (typeof window !== 'undefined') {
   window.addEventListener('touchstart', unlock);
 }
 
-/** Som curto e comemorativo (tom ascendente). Usa o contexto já destravado por um gesto anterior. */
+/** Rugido de torcida comemorando o gol (ruído filtrado com swell) + apito. Sem arquivo de áudio. */
 export function playGoalSound() {
   try {
     const ctx = getAudioCtx();
     if (!ctx) return;
     if (ctx.state === 'suspended') ctx.resume().catch(() => {});
     const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
+    const dur = 1.8;
+
+    // Ruído branco base (a "massa" da torcida)
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+
+    // Band-pass dá o timbre de "aaahh" da galera
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(500, t);
+    bp.frequency.linearRampToValueAtTime(950, t + 0.4); // sobe como o grito crescendo
+    bp.Q.value = 0.6;
+
     const gain = ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(560, t);
-    osc.frequency.exponentialRampToValueAtTime(1200, t + 0.18);
     gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.exponentialRampToValueAtTime(0.3, t + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
-    osc.connect(gain);
+    gain.gain.linearRampToValueAtTime(0.6, t + 0.18); // swell rápido (GOOOL!)
+    gain.gain.setValueAtTime(0.55, t + 0.7);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur); // decai
+
+    src.connect(bp);
+    bp.connect(gain);
     gain.connect(ctx.destination);
+    src.start(t);
+    src.stop(t + dur);
+
+    // Apito curto por cima, pra dar cara de futebol
+    const osc = ctx.createOscillator();
+    const oGain = ctx.createGain();
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 2100;
+    lfo.frequency.value = 16; // vibrato do apito
+    lfoGain.gain.value = 70;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    oGain.gain.setValueAtTime(0.0001, t);
+    oGain.gain.exponentialRampToValueAtTime(0.14, t + 0.03);
+    oGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+    osc.connect(oGain);
+    oGain.connect(ctx.destination);
     osc.start(t);
-    osc.stop(t + 0.5);
+    osc.stop(t + 0.42);
+    lfo.start(t);
+    lfo.stop(t + 0.42);
   } catch {
     // silencioso
   }
