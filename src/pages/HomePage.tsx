@@ -12,6 +12,7 @@ import { empresaService } from '@/services/empresaService';
 import { DesafioStatus } from '@/types';
 import { toast } from 'sonner';
 import { fireConfetti } from '@/lib/celebrate';
+import { MissoesSemana } from '@/components/MissoesSemana';
 
 const HomePage = () => {
   const currentUser = authService.getCurrentUser();
@@ -163,6 +164,8 @@ const HomePage = () => {
           ))}
         </select>
       </section>
+
+      {selectedTeamId && <MissoesSemana timeId={selectedTeamId} />}
 
       <div className="mt-8 grid gap-8 xl:grid-cols-[1fr_1.1fr]">
         <section>
