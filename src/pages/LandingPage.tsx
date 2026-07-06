@@ -136,9 +136,9 @@ const LandingPage = () => {
           <h2 className="mt-3 text-3xl font-black tracking-tight text-foreground">Quem apoia o futebol corporativo.</h2>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             {[
-              { nome: 'Zitec', src: '/patrocinadores/zitec.png', url: 'https://zitec.ai' },
+              { nome: 'Zitec', src: '/patrocinadores/zitec.jpg', url: 'https://zitec.ai' },
               { nome: 'Zisign', src: '/patrocinadores/zisign.png' },
-              { nome: 'Zigestão', src: '/patrocinadores/zigestao.png' },
+              { nome: 'Zigestão', src: '/patrocinadores/zigestao.jpg' },
             ].map((p) => {
               const Logo = (
                 <img
