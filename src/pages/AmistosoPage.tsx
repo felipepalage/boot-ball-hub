@@ -8,6 +8,7 @@ import { getApiErrorMessage } from '@/lib/api-error';
 import { FlyerDoDia } from '@/components/FlyerDoDia';
 import { useAmistosoLive } from '@/hooks/useAmistosoLive';
 import { fireConfetti, playGoalSound } from '@/lib/celebrate';
+import { VitoriaAmistosoOverlay } from '@/components/VitoriaAmistosoOverlay';
 
 type Tab = 'geral' | 'times' | 'rachao' | 'pagamentos';
 
@@ -249,6 +250,7 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
   const [inicioEpoch, setInicioEpoch] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [golOpen, setGolOpen] = useState(false);
+  const [finalizada, setFinalizada] = useState<PartidaAmistoso | null>(null);
   const timerRef = useRef<number | null>(null);
 
   const { data: jogadores = [] } = useQuery({
@@ -352,8 +354,9 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
 
   const finalizarMut = useMutation({
     mutationFn: () => amistosoService.finalizarPartida(partida!.id, elapsed),
-    onSuccess: () => {
+    onSuccess: (p) => {
       fireConfetti(220, 2400);
+      setFinalizada(p);
       toast.success('Partida finalizada e salva!');
       localStorage.removeItem(PARTIDA_KEY);
       setPartida(null);
@@ -474,6 +477,8 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
           pending={golMut.isPending}
         />
       )}
+
+      {finalizada && <VitoriaAmistosoOverlay partida={finalizada} onClose={() => setFinalizada(null)} />}
     </div>
   );
 };
