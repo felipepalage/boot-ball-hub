@@ -116,12 +116,12 @@ export const amistosoService = {
   },
 
   // Ranking / resumo
-  getArtilheiros: async () => {
-    const { data } = await api.get<ArtilheiroAmistoso[]>('/amistoso/ranking/artilheiros');
+  getArtilheiros: async (periodo: 'dia' | 'mes' | 'geral' = 'geral') => {
+    const { data } = await api.get<ArtilheiroAmistoso[]>('/amistoso/ranking/artilheiros', { params: { periodo } });
     return data;
   },
-  getGarcons: async () => {
-    const { data } = await api.get<ArtilheiroAmistoso[]>('/amistoso/ranking/garcons');
+  getGarcons: async (periodo: 'dia' | 'mes' | 'geral' = 'geral') => {
+    const { data } = await api.get<ArtilheiroAmistoso[]>('/amistoso/ranking/garcons', { params: { periodo } });
     return data;
   },
   getResumoDia: async (data?: string) => {

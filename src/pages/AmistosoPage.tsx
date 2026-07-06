@@ -261,13 +261,14 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
     queryKey: ['amistoso', 'times'],
     queryFn: amistosoService.getTimes,
   });
+  const [periodoRk, setPeriodoRk] = useState<'dia' | 'mes' | 'geral'>('geral');
   const { data: artilheiros = [] } = useQuery({
-    queryKey: ['amistoso', 'artilheiros'],
-    queryFn: amistosoService.getArtilheiros,
+    queryKey: ['amistoso', 'artilheiros', periodoRk],
+    queryFn: () => amistosoService.getArtilheiros(periodoRk),
   });
   const { data: garcons = [] } = useQuery({
-    queryKey: ['amistoso', 'garcons'],
-    queryFn: amistosoService.getGarcons,
+    queryKey: ['amistoso', 'garcons', periodoRk],
+    queryFn: () => amistosoService.getGarcons(periodoRk),
   });
   const { data: resumo } = useQuery({
     queryKey: ['amistoso', 'resumo-dia'],
@@ -442,6 +443,23 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
       )}
 
       {/* Ranking artilheiros / garçons */}
+      <div className="mx-auto flex w-fit gap-1 rounded-2xl border border-white/10 bg-white/5 p-1">
+        {([
+          { id: 'dia', label: 'Dia' },
+          { id: 'mes', label: 'Mês' },
+          { id: 'geral', label: 'Geral' },
+        ] as const).map((p) => (
+          <button
+            key={p.id}
+            onClick={() => setPeriodoRk(p.id)}
+            className={`rounded-xl px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] transition ${
+              periodoRk === p.id ? 'bg-primary text-white' : 'text-white/50 hover:text-white'
+            }`}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <RankingCard titulo="Artilheiros" icon="👑" itens={artilheiros} sufixo="gols" />
         <RankingCard titulo="Garçons" icon="🎩" itens={garcons} sufixo="assist." />
