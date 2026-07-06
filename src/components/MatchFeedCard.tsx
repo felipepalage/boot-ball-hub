@@ -77,29 +77,29 @@ export const MatchFeedCard = ({ match }: MatchFeedCardProps) => (
 
     <div className="p-6">
       <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">{formatDateTime(match.dataJogo, match.horaJogo)} • {match.local} • {match.bairro}</p>
-      <h2 className="mt-3 text-3xl font-black tracking-tight text-foreground">{match.manchete}</h2>
-      <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground">{match.resumo}</p>
+      <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">{match.manchete}</h2>
+      <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">{match.resumo}</p>
       <p className="mt-3 text-sm font-semibold text-primary">{match.chamadaEditorial}</p>
       {match.artilheirosResumo && <p className="mt-2 text-sm text-muted-foreground">{match.artilheirosResumo}</p>}
 
-      <div className="mt-6 grid gap-4 rounded-[1.5rem] border border-white/10 bg-black/20 p-5 md:grid-cols-[1fr_auto_1fr] md:items-center">
-        <div className="flex items-center gap-3 md:justify-end">
-          <div className="text-right">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{match.empresaCriadora}</p>
-            <p className="text-xl font-black text-foreground">{match.timeCriador}</p>
+      <div className="mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-[1.5rem] border border-white/10 bg-black/20 p-4 sm:gap-4 sm:p-5">
+        <div className="flex min-w-0 flex-col items-center gap-2 text-center">
+          <TeamCrest nome={match.timeCriador} shape={match.timeCriadorEscudoShape || 1} corPrimaria={match.timeCriadorCorPrimaria || '#DC2626'} corSecundaria={match.timeCriadorCorSecundaria || '#111827'} size={48} />
+          <div className="min-w-0">
+            <p className="truncate text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{match.empresaCriadora}</p>
+            <p className="truncate text-base font-black text-foreground sm:text-xl">{match.timeCriador}</p>
           </div>
-          <TeamCrest nome={match.timeCriador} shape={match.timeCriadorEscudoShape || 1} corPrimaria={match.timeCriadorCorPrimaria || '#DC2626'} corSecundaria={match.timeCriadorCorSecundaria || '#111827'} size={56} />
         </div>
 
-        <div className="flex items-center justify-center rounded-[1.25rem] bg-foreground px-5 py-4 text-2xl font-black tabular-nums text-background">
+        <div className="flex shrink-0 items-center justify-center rounded-2xl bg-foreground px-4 py-3 text-xl font-black tabular-nums text-background sm:px-5 sm:py-4 sm:text-2xl">
           {match.placarCriador ?? 0} x {match.placarDesafiante ?? 0}
         </div>
 
-        <div className="flex items-center gap-3">
-          <TeamCrest nome={match.timeDesafiante} shape={match.timeDesafianteEscudoShape || 1} corPrimaria={match.timeDesafianteCorPrimaria || '#DC2626'} corSecundaria={match.timeDesafianteCorSecundaria || '#111827'} size={56} />
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{match.empresaDesafiante}</p>
-            <p className="text-xl font-black text-foreground">{match.timeDesafiante}</p>
+        <div className="flex min-w-0 flex-col items-center gap-2 text-center">
+          <TeamCrest nome={match.timeDesafiante} shape={match.timeDesafianteEscudoShape || 1} corPrimaria={match.timeDesafianteCorPrimaria || '#DC2626'} corSecundaria={match.timeDesafianteCorSecundaria || '#111827'} size={48} />
+          <div className="min-w-0">
+            <p className="truncate text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{match.empresaDesafiante}</p>
+            <p className="truncate text-base font-black text-foreground sm:text-xl">{match.timeDesafiante}</p>
           </div>
         </div>
       </div>
