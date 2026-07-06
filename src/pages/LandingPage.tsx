@@ -145,7 +145,7 @@ const LandingPage = () => {
                   src={p.src}
                   alt={p.nome}
                   loading="lazy"
-                  className="h-14 w-auto object-contain sm:h-16"
+                  className="h-14 w-auto object-contain mix-blend-multiply sm:h-16"
                 />
               );
               return (
