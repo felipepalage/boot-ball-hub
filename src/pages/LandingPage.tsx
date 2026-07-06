@@ -138,7 +138,7 @@ const LandingPage = () => {
             {[
               { nome: 'Zitec', src: '/patrocinadores/zitec.jpg', url: 'https://zitec.ai' },
               { nome: 'Zisign', src: '/patrocinadores/zisign.png' },
-              { nome: 'Zigestão', src: '/patrocinadores/zigestao.jpg' },
+              { nome: 'Zigestão', src: '/patrocinadores/zigestao.png' },
             ].map((p) => {
               const Logo = (
                 <img
