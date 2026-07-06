@@ -341,6 +341,15 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
     onError: (e) => toast.error(getApiErrorMessage(e, 'Algo deu errado. Tente novamente.')),
   });
 
+  const anularMut = useMutation({
+    mutationFn: (golId: string) => amistosoService.anularGol(partida!.id, golId),
+    onSuccess: (p) => {
+      setPartida(p);
+      toast.success('Gol anulado.');
+    },
+    onError: (e) => toast.error(getApiErrorMessage(e, 'Não foi possível anular o gol.')),
+  });
+
   const finalizarMut = useMutation({
     mutationFn: () => amistosoService.finalizarPartida(partida!.id, elapsed),
     onSuccess: () => {
@@ -402,6 +411,30 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
           >
             Finalizar partida
           </button>
+
+          {partida.gols.length > 0 && (
+            <div className="mt-4 space-y-1.5">
+              <p className="text-xs uppercase tracking-widest text-white/40">Gols da partida</p>
+              {partida.gols.map((g) => (
+                <div key={g.id} className="flex items-center justify-between rounded-xl bg-black/20 px-3 py-2 text-sm">
+                  <span className="min-w-0 truncate text-white/80">
+                    ⚽ {g.autorNome}
+                    <span className="text-white/40"> · {g.timeNumero === 1 ? partida.time1Nome : partida.time2Nome}</span>
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (confirm(`Anular o gol de ${g.autorNome}?`)) anularMut.mutate(g.id);
+                    }}
+                    disabled={anularMut.isPending}
+                    className="ml-2 shrink-0 text-white/30 transition hover:text-rose-400 disabled:opacity-40"
+                    title="Anular gol"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 

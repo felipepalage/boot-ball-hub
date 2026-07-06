@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Download, Share2 } from 'lucide-react';
 import type { Desafio } from '@/types';
 import { formatDate } from '@/lib/formatters';
+import logo from '@/assets/logo.png';
 
 interface MatchResultCardProps {
   desafio: Desafio;
 }
 
 /**
- * Gera um card de resultado 1080x1920 (formato story) de um desafio finalizado.
+ * Card de resultado 1080x1920 (story) de um desafio finalizado, com a logo do Boleiroffice.
  * Renderiza no <canvas> e permite baixar / compartilhar como imagem.
  */
 export const MatchResultCard = ({ desafio }: MatchResultCardProps) => {
@@ -26,82 +27,108 @@ export const MatchResultCard = ({ desafio }: MatchResultCardProps) => {
     canvas.width = W;
     canvas.height = H;
 
-    const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0, '#7f1d1d');
-    grad.addColorStop(0.5, '#1a0a0a');
-    grad.addColorStop(1, '#050505');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
+    const logoImg = new Image();
+    logoImg.src = logo;
 
-    const glow = ctx.createRadialGradient(W / 2, 380, 40, W / 2, 380, 640);
-    glow.addColorStop(0, 'rgba(220,38,38,0.35)');
-    glow.addColorStop(1, 'rgba(220,38,38,0)');
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, W, 1000);
+    const draw = () => {
+      // Fundo
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, '#7f1d1d');
+      grad.addColorStop(0.5, '#1a0a0a');
+      grad.addColorStop(1, '#050505');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
 
-    ctx.textAlign = 'center';
+      const glow = ctx.createRadialGradient(W / 2, 460, 40, W / 2, 460, 680);
+      glow.addColorStop(0, 'rgba(220,38,38,0.35)');
+      glow.addColorStop(1, 'rgba(220,38,38,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, W, 1050);
 
-    // Cabeçalho
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    ctx.font = '600 34px Arial';
-    ctx.fillText((desafio.local || desafio.bairro || '').toUpperCase(), W / 2, 170);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '900 100px Arial';
-    ctx.fillText('RESULTADO', W / 2, 300);
-
-    ctx.fillStyle = '#f87171';
-    ctx.font = '700 40px Arial';
-    ctx.fillText(formatDate(desafio.dataJogo), W / 2, 372);
-
-    const criador = desafio.timeCriador ?? 'Time 1';
-    const desafiante = desafio.timeDesafiante ?? 'Time 2';
-    const pc = desafio.placarCriador ?? 0;
-    const pd = desafio.placarDesafiante ?? 0;
-
-    // Nome time criador
-    fitText(ctx, criador, W / 2, 620, W - 160, 72);
-    // Placar
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '900 220px Arial';
-    ctx.fillText(`${pc}  x  ${pd}`, W / 2, 900);
-    // Nome time desafiante
-    fitText(ctx, desafiante, W / 2, 1010, W - 160, 72);
-
-    // Vencedor
-    const vencedor = pc > pd ? criador : pd > pc ? desafiante : null;
-    ctx.fillStyle = '#f59e0b';
-    ctx.font = '800 44px Arial';
-    ctx.fillText(vencedor ? `🏆 ${vencedor}` : '🤝 Empate', W / 2, 1110);
-
-    // Artilheiros
-    const gols = [...(desafio.gols ?? [])]
-      .sort((a, b) => b.quantidadeGols - a.quantidadeGols)
-      .slice(0, 6);
-    if (gols.length > 0) {
       ctx.textAlign = 'center';
-      ctx.fillStyle = 'rgba(255,255,255,0.55)';
-      ctx.font = '700 34px Arial';
-      ctx.fillText('ARTILHEIROS', W / 2, 1260);
 
-      ctx.textAlign = 'left';
-      let y = 1340;
-      for (const g of gols) {
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '700 44px Arial';
-        const txt = `⚽ ${g.nomeAutor} (${g.quantidadeGols}) — ${g.time}`;
-        ctx.fillText(truncate(ctx, txt, W - 200), 140, y);
-        y += 76;
+      // Logo no topo
+      if (logoImg.naturalWidth > 0) {
+        const h = 150;
+        const w = logoImg.naturalWidth * (h / logoImg.naturalHeight);
+        ctx.drawImage(logoImg, W / 2 - w / 2, 70, w, h);
       }
-      ctx.textAlign = 'center';
+
+      // Cabeçalho
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.font = '600 32px Arial';
+      ctx.fillText((desafio.local || desafio.bairro || '').toUpperCase(), W / 2, 300);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 92px Arial';
+      ctx.fillText('RESULTADO', W / 2, 400);
+
+      ctx.fillStyle = '#f87171';
+      ctx.font = '700 38px Arial';
+      ctx.fillText(formatDate(desafio.dataJogo), W / 2, 464);
+
+      const criador = desafio.timeCriador ?? 'Time 1';
+      const desafiante = desafio.timeDesafiante ?? 'Time 2';
+      const pc = desafio.placarCriador ?? 0;
+      const pd = desafio.placarDesafiante ?? 0;
+
+      fitText(ctx, criador, W / 2, 660, W - 160, 68);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 210px Arial';
+      ctx.fillText(`${pc}  x  ${pd}`, W / 2, 920);
+      fitText(ctx, desafiante, W / 2, 1030, W - 160, 68);
+
+      const vencedor = pc > pd ? criador : pd > pc ? desafiante : null;
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '800 44px Arial';
+      ctx.fillText(vencedor ? `🏆 ${vencedor}` : '🤝 Empate', W / 2, 1130);
+
+      // Linha divisória
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(140, 1200);
+      ctx.lineTo(W - 140, 1200);
+      ctx.stroke();
+
+      // Artilheiros
+      const gols = [...(desafio.gols ?? [])].sort((a, b) => b.quantidadeGols - a.quantidadeGols).slice(0, 6);
+      if (gols.length > 0) {
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'rgba(255,255,255,0.55)';
+        ctx.font = '700 32px Arial';
+        ctx.fillText('ARTILHEIROS', W / 2, 1280);
+
+        ctx.textAlign = 'left';
+        let y = 1356;
+        for (const g of gols) {
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '700 42px Arial';
+          const txt = `⚽ ${g.nomeAutor} (${g.quantidadeGols}) — ${g.time}`;
+          ctx.fillText(truncate(ctx, txt, W - 200), 150, y);
+          y += 74;
+        }
+        ctx.textAlign = 'center';
+      }
+
+      // Rodapé com logo pequena
+      if (logoImg.naturalWidth > 0) {
+        const h = 52;
+        const w = logoImg.naturalWidth * (h / logoImg.naturalHeight);
+        ctx.drawImage(logoImg, W / 2 - w / 2, 1770, w, h);
+      }
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.font = '600 30px Arial';
+      ctx.fillText('Boleiroffice • futebol corporativo', W / 2, 1860);
+
+      setDataUrl(canvas.toDataURL('image/png'));
+    };
+
+    if (logoImg.complete && logoImg.naturalWidth > 0) draw();
+    else {
+      logoImg.onload = draw;
+      logoImg.onerror = draw; // desenha sem logo se falhar
     }
-
-    // Rodapé
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.font = '600 32px Arial';
-    ctx.fillText('Boleiroffice', W / 2, 1840);
-
-    setDataUrl(canvas.toDataURL('image/png'));
   }, [desafio]);
 
   const nomeArquivo = `resultado-${(desafio.timeCriador ?? 'time').toLowerCase().replace(/\s+/g, '-')}.png`;
@@ -151,14 +178,7 @@ export const MatchResultCard = ({ desafio }: MatchResultCardProps) => {
   );
 };
 
-function fitText(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxWidth: number,
-  baseSize: number,
-) {
+function fitText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, baseSize: number) {
   let size = baseSize;
   ctx.fillStyle = '#ffffff';
   do {

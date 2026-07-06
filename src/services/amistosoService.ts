@@ -94,6 +94,10 @@ export const amistosoService = {
     const { data } = await api.post<PartidaAmistoso>(`/amistoso/partidas/${partidaId}/gols`, payload);
     return data;
   },
+  anularGol: async (partidaId: string, golId: string) => {
+    const { data } = await api.delete<PartidaAmistoso>(`/amistoso/partidas/${partidaId}/gols/${golId}`);
+    return data;
+  },
   finalizarPartida: async (partidaId: string, duracaoSegundos: number) => {
     const { data } = await api.post<PartidaAmistoso>(`/amistoso/partidas/${partidaId}/finalizar`, {
       duracaoSegundos,
