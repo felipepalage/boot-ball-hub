@@ -12,6 +12,52 @@ const PERIODOS: { id: RankingPeriodo; label: string }[] = [
   { id: 'semanal', label: 'Semanal' },
 ];
 
+const RankRow = ({
+  pos,
+  crestNome,
+  escudoShape,
+  corPrimaria,
+  corSecundaria,
+  nome,
+  sub,
+  chips,
+  destaque,
+  destaqueLabel,
+}: {
+  pos: number;
+  crestNome: string;
+  escudoShape?: number;
+  corPrimaria?: string;
+  corSecundaria?: string;
+  nome: string;
+  sub?: string;
+  chips: string[];
+  destaque: number | string;
+  destaqueLabel: string;
+}) => (
+  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/20 p-3">
+    <div className="w-6 shrink-0 text-center text-sm font-black text-foreground">
+      {pos <= 3 ? <Trophy size={15} className="mx-auto text-primary" /> : pos}
+    </div>
+    <TeamCrest nome={crestNome} shape={escudoShape || 1} corPrimaria={corPrimaria || '#DC2626'} corSecundaria={corSecundaria || '#111827'} size={40} />
+    <div className="min-w-0 flex-1">
+      <p className="truncate font-bold text-foreground">{nome}</p>
+      {sub && <p className="truncate text-xs text-muted-foreground">{sub}</p>}
+      {chips.length > 0 && (
+        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-muted-foreground">
+          {chips.map((c, i) => (
+            <span key={i}>{c}</span>
+          ))}
+        </div>
+      )}
+    </div>
+    <div className="shrink-0 pl-1 text-right">
+      <p className="text-2xl font-black tabular-nums text-primary">{destaque}</p>
+      <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{destaqueLabel}</p>
+    </div>
+  </div>
+);
+
 const RankingPage = () => {
   const [page, setPage] = useState(1);
   const [tab, setTab] = useState<RankingTab>('times');
@@ -76,83 +122,63 @@ const RankingPage = () => {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-card/80 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[780px] text-sm">
-            <thead>
-              <tr className="border-b border-white/10 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                <th className="p-4 text-left">#</th>
-                <th className="p-4 text-left">Nome</th>
-                <th className="p-4 text-left">Empresa</th>
-                {tab === 'times' && <><th className="p-4 text-center">J</th><th className="p-4 text-center">V</th><th className="p-4 text-center">GP</th><th className="p-4 text-center">SG</th><th className="p-4 text-center">PTS</th></>}
-                {tab === 'artilheiros' && <><th className="p-4 text-center">Gols</th><th className="p-4 text-center">Jogos</th></>}
-                {tab === 'reputacao' && <><th className="p-4 text-center">Compareceu</th><th className="p-4 text-center">Cancelou tarde</th><th className="p-4 text-center">Confirmou rapido</th><th className="p-4 text-center">Indice</th></>}
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading && Array.from({ length: 6 }).map((_, index) => (
-                <tr key={index} className="border-b border-white/5 animate-pulse">
-                  <td className="p-4"><div className="h-4 w-6 rounded bg-secondary" /></td>
-                  <td className="p-4"><div className="h-4 w-28 rounded bg-secondary" /></td>
-                  <td className="p-4"><div className="h-4 w-24 rounded bg-secondary" /></td>
-                  <td className="p-4"><div className="mx-auto h-4 w-8 rounded bg-secondary" /></td>
-                </tr>
-              ))}
+      <div className="rounded-[2rem] border border-white/10 bg-card/80 p-3 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
+        <div className="space-y-2">
+          {isLoading && Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="h-[68px] animate-pulse rounded-2xl bg-secondary/40" />
+          ))}
 
-              {tab === 'times' && rankingQuery.data?.items.map((item) => (
-                <tr key={item.timeId} className="border-b border-white/5 last:border-0">
-                  <td className="p-4 font-black text-foreground"><span className="flex items-center gap-2">{item.posicao <= 3 && <Trophy size={15} className="text-primary" />}{item.posicao}</span></td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <TeamCrest nome={item.time} shape={item.escudoShape || 1} corPrimaria={item.corPrimaria || '#DC2626'} corSecundaria={item.corSecundaria || '#111827'} size={44} />
-                      <p className="font-bold text-foreground">{item.time}</p>
-                    </div>
-                  </td>
-                  <td className="p-4 text-muted-foreground">{item.empresa}</td>
-                  <td className="p-4 text-center tabular-nums text-foreground">{item.jogos}</td>
-                  <td className="p-4 text-center tabular-nums text-foreground">{item.vitorias}</td>
-                  <td className="p-4 text-center tabular-nums text-foreground">{item.golsPro}</td>
-                  <td className="p-4 text-center tabular-nums font-semibold text-foreground">{item.saldo > 0 ? `+${item.saldo}` : item.saldo}</td>
-                  <td className="p-4 text-center tabular-nums font-black text-primary">{item.pontos}</td>
-                </tr>
-              ))}
+          {!isLoading && dataset?.items.length === 0 && (
+            <p className="py-10 text-center text-sm text-muted-foreground">Sem dados nesse período ainda.</p>
+          )}
 
-              {tab === 'artilheiros' && scorersQuery.data?.items.map((item) => (
-                <tr key={`${item.timeId}-${item.nomeAutor}`} className="border-b border-white/5 last:border-0">
-                  <td className="p-4 font-black text-foreground">{item.posicao}</td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <TeamCrest nome={item.time} shape={item.escudoShape || 1} corPrimaria={item.corPrimaria || '#DC2626'} corSecundaria={item.corSecundaria || '#111827'} size={44} />
-                      <div>
-                        <p className="font-bold text-foreground">{item.nomeAutor}</p>
-                        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{item.time}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-4 text-muted-foreground">{item.empresa}</td>
-                  <td className="p-4 text-center font-black text-primary">{item.gols}</td>
-                  <td className="p-4 text-center text-foreground">{item.jogosComGol}</td>
-                </tr>
-              ))}
+          {tab === 'times' && rankingQuery.data?.items.map((item) => (
+            <RankRow
+              key={item.timeId}
+              pos={item.posicao}
+              crestNome={item.time}
+              escudoShape={item.escudoShape}
+              corPrimaria={item.corPrimaria}
+              corSecundaria={item.corSecundaria}
+              nome={item.time}
+              sub={item.empresa}
+              chips={[`J ${item.jogos}`, `V ${item.vitorias}`, `GP ${item.golsPro}`, `SG ${item.saldo > 0 ? `+${item.saldo}` : item.saldo}`]}
+              destaque={item.pontos}
+              destaqueLabel="pts"
+            />
+          ))}
 
-              {tab === 'reputacao' && reputationQuery.data?.items.map((item) => (
-                <tr key={item.timeId} className="border-b border-white/5 last:border-0">
-                  <td className="p-4 font-black text-foreground">{item.posicao}</td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <TeamCrest nome={item.time} shape={item.escudoShape || 1} corPrimaria={item.corPrimaria || '#DC2626'} corSecundaria={item.corSecundaria || '#111827'} size={44} />
-                      <p className="font-bold text-foreground">{item.time}</p>
-                    </div>
-                  </td>
-                  <td className="p-4 text-muted-foreground">{item.empresa}</td>
-                  <td className="p-4 text-center text-foreground">{item.comparecimentos}</td>
-                  <td className="p-4 text-center text-foreground">{item.cancelamentosTardios}</td>
-                  <td className="p-4 text-center text-foreground">{item.confirmacoesRapidas}</td>
-                  <td className="p-4 text-center font-black text-primary">{item.indiceConfiabilidade}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {tab === 'artilheiros' && scorersQuery.data?.items.map((item) => (
+            <RankRow
+              key={`${item.timeId}-${item.nomeAutor}`}
+              pos={item.posicao}
+              crestNome={item.time}
+              escudoShape={item.escudoShape}
+              corPrimaria={item.corPrimaria}
+              corSecundaria={item.corSecundaria}
+              nome={item.nomeAutor}
+              sub={`${item.time} · ${item.empresa}`}
+              chips={[`Jogos c/ gol ${item.jogosComGol}`]}
+              destaque={item.gols}
+              destaqueLabel="gols"
+            />
+          ))}
+
+          {tab === 'reputacao' && reputationQuery.data?.items.map((item) => (
+            <RankRow
+              key={item.timeId}
+              pos={item.posicao}
+              crestNome={item.time}
+              escudoShape={item.escudoShape}
+              corPrimaria={item.corPrimaria}
+              corSecundaria={item.corSecundaria}
+              nome={item.time}
+              sub={item.empresa}
+              chips={[`✓ ${item.comparecimentos}`, `⏰ ${item.cancelamentosTardios}`, `⚡ ${item.confirmacoesRapidas}`]}
+              destaque={item.indiceConfiabilidade}
+              destaqueLabel="índice"
+            />
+          ))}
         </div>
       </div>
 
