@@ -1,4 +1,5 @@
-﻿import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+﻿import { lazy, Suspense } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -7,29 +8,32 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Navbar } from '@/components/Navbar';
 import { NotificationBell } from '@/components/NotificationBell';
 import { authService } from '@/services/authService';
-import HomePage from './pages/HomePage';
-import TimesPage from './pages/TimesPage';
-import FeedPage from './pages/FeedPage';
-import RankingPage from './pages/RankingPage';
-import CriarDesafioPage from './pages/CriarDesafioPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import TimeProfilePage from './pages/TimeProfilePage';
-import EmpresaProfilePage from './pages/EmpresaProfilePage';
-import DisponibilidadePage from './pages/DisponibilidadePage';
-import CalendarioPage from './pages/CalendarioPage';
-import TemporadasPage from './pages/TemporadasPage';
-import MuralPage from './pages/MuralPage';
-import FinanceiroPage from './pages/FinanceiroPage';
-import AdminPage from './pages/AdminPage';
-import QuadrasPage from './pages/QuadrasPage';
-import TorneiosPage from './pages/TorneiosPage';
-import TorneioDetalhePage from './pages/TorneioDetalhePage';
-import DesafioDetalhePage from './pages/DesafioDetalhePage';
-import JogadorPerfilPage from './pages/JogadorPerfilPage';
-import ArtilhariaPage from './pages/ArtilhariaPage';
-import AmistosoPage from './pages/AmistosoPage';
-import NotFound from './pages/NotFound';
+
+// Rotas carregadas sob demanda (code-splitting) — reduz o bundle inicial.
+const HomePage = lazy(() => import('./pages/HomePage'));
+const TimesPage = lazy(() => import('./pages/TimesPage'));
+const FeedPage = lazy(() => import('./pages/FeedPage'));
+const RankingPage = lazy(() => import('./pages/RankingPage'));
+const CriarDesafioPage = lazy(() => import('./pages/CriarDesafioPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const TimeProfilePage = lazy(() => import('./pages/TimeProfilePage'));
+const EmpresaProfilePage = lazy(() => import('./pages/EmpresaProfilePage'));
+const DisponibilidadePage = lazy(() => import('./pages/DisponibilidadePage'));
+const CalendarioPage = lazy(() => import('./pages/CalendarioPage'));
+const TemporadasPage = lazy(() => import('./pages/TemporadasPage'));
+const MuralPage = lazy(() => import('./pages/MuralPage'));
+const FinanceiroPage = lazy(() => import('./pages/FinanceiroPage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const QuadrasPage = lazy(() => import('./pages/QuadrasPage'));
+const TorneiosPage = lazy(() => import('./pages/TorneiosPage'));
+const TorneioDetalhePage = lazy(() => import('./pages/TorneioDetalhePage'));
+const DesafioDetalhePage = lazy(() => import('./pages/DesafioDetalhePage'));
+const JogadorPerfilPage = lazy(() => import('./pages/JogadorPerfilPage'));
+const ArtilhariaPage = lazy(() => import('./pages/ArtilhariaPage'));
+const AmistosoPage = lazy(() => import('./pages/AmistosoPage'));
+const EstatisticasPage = lazy(() => import('./pages/EstatisticasPage'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +70,13 @@ const App = () => (
     <TooltipProvider>
       <Sonner richColors position="top-right" />
       <BrowserRouter>
+        <Suspense
+          fallback={
+            <div className="flex min-h-dvh items-center justify-center text-sm text-muted-foreground">
+              Carregando…
+            </div>
+          }
+        >
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -83,6 +94,7 @@ const App = () => (
           <Route path="/jogadores/:id/perfil" element={<AppLayout><JogadorPerfilPage /></AppLayout>} />
           <Route path="/artilharia" element={<ProtectedRoute><AppLayout><ArtilhariaPage /></AppLayout></ProtectedRoute>} />
           <Route path="/amistoso" element={<ProtectedRoute><AppLayout><AmistosoPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/estatisticas" element={<ProtectedRoute><AppLayout><EstatisticasPage /></AppLayout></ProtectedRoute>} />
           <Route path="/agenda" element={<ProtectedRoute><AppLayout><CalendarioPage /></AppLayout></ProtectedRoute>} />
           <Route path="/temporadas" element={<ProtectedRoute><AppLayout><TemporadasPage /></AppLayout></ProtectedRoute>} />
           <Route path="/mural" element={<ProtectedRoute><AppLayout><MuralPage /></AppLayout></ProtectedRoute>} />
@@ -90,6 +102,7 @@ const App = () => (
           <Route path="/admin" element={<ProtectedRoute><AppLayout><AdminPage /></AppLayout></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
