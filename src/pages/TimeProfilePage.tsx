@@ -14,6 +14,7 @@ import { TeamCrest } from '@/components/TeamCrest';
 import { CrestBuilder } from '@/components/CrestBuilder';
 import { ConquistasTime } from '@/components/ConquistasTime';
 import { RivaisTime } from '@/components/RivaisTime';
+import { Escalacao } from '@/components/Escalacao';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { desafioService } from '@/services/desafioService';
 import { timeService } from '@/services/timeService';
@@ -260,6 +261,13 @@ const TimeProfilePage = () => {
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <ConquistasTime timeId={time.id} />
           <RivaisTime timeId={time.id} />
+        </div>
+      )}
+
+      {/* ── Escalação ── */}
+      {time && (
+        <div className="mt-6">
+          <Escalacao jogadores={jogadores} corPrimaria={time.corPrimaria} />
         </div>
       )}
 
