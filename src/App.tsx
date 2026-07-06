@@ -35,6 +35,7 @@ const AmistosoPage = lazy(() => import('./pages/AmistosoPage'));
 const EstatisticasPage = lazy(() => import('./pages/EstatisticasPage'));
 const TermosPage = lazy(() => import('./pages/TermosPage'));
 const PrivacidadePage = lazy(() => import('./pages/PrivacidadePage'));
+const PublicoRachaoPage = lazy(() => import('./pages/PublicoRachaoPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const queryClient = new QueryClient({
@@ -84,6 +85,7 @@ const App = () => (
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/termos" element={<TermosPage />} />
           <Route path="/privacidade" element={<PrivacidadePage />} />
+          <Route path="/r/:token" element={<PublicoRachaoPage />} />
           <Route path="/times/:timeId/:slug?" element={<TimeProfilePage />} />
           <Route path="/empresas/:empresaId/:slug?" element={<EmpresaProfilePage />} />
           <Route path="/" element={<ProtectedRoute><AppLayout><HomePage /></AppLayout></ProtectedRoute>} />

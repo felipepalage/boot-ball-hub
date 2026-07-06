@@ -9,6 +9,7 @@ import { FlyerDoDia } from '@/components/FlyerDoDia';
 import { useAmistosoLive } from '@/hooks/useAmistosoLive';
 import { fireConfetti, playGoalSound } from '@/lib/celebrate';
 import { VitoriaAmistosoOverlay } from '@/components/VitoriaAmistosoOverlay';
+import { RachaoLinkCard } from '@/components/RachaoLinkCard';
 
 type Tab = 'geral' | 'times' | 'rachao' | 'pagamentos';
 
@@ -373,6 +374,8 @@ const RachaoTab = ({ empresaNome }: { empresaNome: string }) => {
 
   return (
     <div className="space-y-6">
+      <RachaoLinkCard />
+
       {/* Partida ativa / iniciar */}
       {!partida ? (
         <section className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
