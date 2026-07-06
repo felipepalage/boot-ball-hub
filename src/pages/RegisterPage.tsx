@@ -158,6 +158,12 @@ const RegisterPage = () => {
               Entrar
             </Link>
           </p>
+          <p className="mt-4 text-center text-xs text-white/35">
+            Ao criar conta você concorda com os{' '}
+            <Link to="/termos" className="transition hover:text-white/60">Termos</Link>
+            {' e a '}
+            <Link to="/privacidade" className="transition hover:text-white/60">Privacidade</Link>.
+          </p>
         </section>
       </div>
     </div>

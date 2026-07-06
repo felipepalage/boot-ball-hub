@@ -91,6 +91,11 @@ const LoginPage = () => {
               Cadastre-se
             </Link>
           </p>
+          <p className="mt-4 text-center text-xs text-white/35">
+            <Link to="/termos" className="transition hover:text-white/60">Termos de Uso</Link>
+            {' · '}
+            <Link to="/privacidade" className="transition hover:text-white/60">Privacidade</Link>
+          </p>
         </section>
       </div>
     </div>
