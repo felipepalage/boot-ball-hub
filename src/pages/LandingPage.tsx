@@ -40,7 +40,7 @@ const LandingPage = () => {
 
         <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-4 py-5">
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="Boleiroffice" className="h-12 w-auto" />
+            <img src={logo} alt="Boleiroffice" className="h-20 w-auto sm:h-24" />
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-semibold text-white/64 md:flex">
             <Link to="/ranking" className="transition hover:text-white">Ranking</Link>
@@ -127,6 +127,38 @@ const LandingPage = () => {
               <p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="px-4 py-14">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Patrocinadores</p>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-foreground">Quem apoia o futebol corporativo.</h2>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            {[
+              { nome: 'Zitec', src: '/patrocinadores/zitec.png', url: 'https://zitec.ai' },
+              { nome: 'Zisign', src: '/patrocinadores/zisign.png' },
+              { nome: 'Zigestão', src: '/patrocinadores/zigestao.png' },
+            ].map((p) => {
+              const Logo = (
+                <img
+                  src={p.src}
+                  alt={p.nome}
+                  loading="lazy"
+                  className="h-14 w-auto object-contain sm:h-16"
+                />
+              );
+              return (
+                <div key={p.nome} className="flex h-24 w-52 items-center justify-center rounded-2xl bg-white px-6 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+                  {p.url ? (
+                    <a href={p.url} target="_blank" rel="noopener noreferrer" aria-label={p.nome}>{Logo}</a>
+                  ) : (
+                    Logo
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
