@@ -20,16 +20,16 @@ const formatCnpj = (value: string) => {
 
 const schema = z.object({
   nome: z.string().min(2, 'Nome deve ter ao menos 2 caracteres'),
-  email: z.string().email('E-mail invÃ¡lido'),
+  email: z.string().email('E-mail inválido'),
   senha: z.string().min(6, 'Senha deve ter ao menos 6 caracteres'),
-  empresaNome: z.string().min(2, 'Nome da empresa obrigatÃ³rio'),
+  empresaNome: z.string().min(2, 'Nome da empresa obrigatório'),
   empresaCnpj: z
     .string()
     .transform(onlyDigits)
-    .refine((v) => v.length === 14, 'CNPJ deve ter 14 dÃ­gitos'),
-  empresaBairro: z.string().min(2, 'Bairro obrigatÃ³rio'),
-  empresaCidade: z.string().min(2, 'Cidade obrigatÃ³ria'),
-  empresaLogoUrl: z.string().url('URL invÃ¡lida').optional().or(z.literal('')),
+    .refine((v) => v.length === 14, 'CNPJ deve ter 14 dígitos'),
+  empresaBairro: z.string().min(2, 'Bairro obrigatório'),
+  empresaCidade: z.string().min(2, 'Cidade obrigatória'),
+  empresaLogoUrl: z.string().url('URL inválida').optional().or(z.literal('')),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -161,7 +161,7 @@ const RegisterPage = () => {
             </div>
 
             <Field label="Senha" error={errors.senha?.message}>
-              <input type="password" {...register('senha')} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" className={inputClass} aria-invalid={!!errors.senha} />
+              <input type="password" {...register('senha')} placeholder="••••••••" className={inputClass} aria-invalid={!!errors.senha} />
             </Field>
 
             <button
@@ -183,7 +183,7 @@ const RegisterPage = () => {
             </Link>
           </p>
           <p className="mt-4 text-center text-xs text-white/35">
-            Ao criar conta vocÃª concorda com os{' '}
+            Ao criar conta você concorda com os{' '}
             <Link to="/termos" className="transition hover:text-white/60">Termos</Link>
             {' e a '}
             <Link to="/privacidade" className="transition hover:text-white/60">Privacidade</Link>.
