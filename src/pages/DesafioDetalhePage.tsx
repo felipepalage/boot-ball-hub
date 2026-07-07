@@ -6,6 +6,7 @@ import { desafioService } from '@/services/desafioService';
 import { chatService } from '@/services/chatService';
 import { authService } from '@/services/authService';
 import { TeamCrest } from '@/components/TeamCrest';
+import { ResultadoShareCard } from '@/components/ResultadoShareCard';
 import { DesafioStatus } from '@/types';
 import { toast } from 'sonner';
 
@@ -28,6 +29,7 @@ const STATUS_COLOR: Record<number, string> = {
 const DesafioDetalhePage = () => {
   const { id } = useParams<{ id: string }>();
   const currentUser = authService.getCurrentUser();
+  const [showResultado, setShowResultado] = useState(false);
   const queryClient = useQueryClient();
   const [mensagem, setMensagem] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -180,6 +182,49 @@ const DesafioDetalhePage = () => {
           </div>
         )}
       </div>
+
+      {/* Convidar empresa (desafio aguardando adversário) */}
+      {desafio.status === DesafioStatus.Aberto && (
+        <div className="mb-6 rounded-[2rem] border border-white/10 bg-card/60 p-5">
+          <p className="text-sm text-muted-foreground">
+            Falta adversário? Convide uma empresa pra aceitar esse desafio no Boleiroffice.
+          </p>
+          <button
+            onClick={() => {
+              const msg = `⚽ Desafiei sua empresa pra um jogo no Boleiroffice — a plataforma de futebol corporativo entre empresas! Cadastra a empresa (é por CNPJ) e bora marcar: https://boleiroffice.com.br/register`;
+              window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+            }}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-3 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+          >
+            <MessageCircle size={16} /> Convidar empresa (WhatsApp)
+          </button>
+        </div>
+      )}
+
+      {/* Compartilhar resultado */}
+      {isFinalized && hasScore && desafio.timeDesafiante && (
+        <div className="mb-6 rounded-[2rem] border border-white/10 bg-card/60 p-6">
+          <button
+            onClick={() => setShowResultado((v) => !v)}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+          >
+            {showResultado ? 'Ocultar card' : '📣 Compartilhar resultado'}
+          </button>
+          {showResultado && (
+            <div className="mt-5">
+              <ResultadoShareCard
+                timeCasa={desafio.timeCriador}
+                empresaCasa={desafio.empresaCriador}
+                golsCasa={desafio.placarCriador ?? 0}
+                timeFora={desafio.timeDesafiante}
+                empresaFora={desafio.empresaDesafiante}
+                golsFora={desafio.placarDesafiante ?? 0}
+                dataJogo={desafio.dataJogo}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Chat */}
       {currentUser ? (

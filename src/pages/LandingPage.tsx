@@ -42,8 +42,23 @@ const LandingPage = () => {
     queryFn: () => rankingService.getScorers(1, 5, 'geral'),
   });
 
+  const stats = useQuery({
+    queryKey: ['landing-estatisticas'],
+    queryFn: rankingService.getEstatisticas,
+    retry: false,
+  });
+
   const topTimes = ranking.data?.items ?? [];
   const topScorers = artilheiros.data?.items ?? [];
+  const s = stats.data;
+  const contadores = s
+    ? [
+        { valor: s.empresas, label: 'Empresas' },
+        { valor: s.times, label: 'Times' },
+        { valor: s.jogos, label: 'Jogos' },
+        { valor: s.gols, label: 'Gols' },
+      ]
+    : [];
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
@@ -133,6 +148,19 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {contadores.length > 0 && (
+        <section className="border-y border-white/10 bg-card/40 px-4 py-8">
+          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 sm:grid-cols-4">
+            {contadores.map((c) => (
+              <div key={c.label} className="text-center">
+                <p className="text-4xl font-black tabular-nums text-white sm:text-5xl">{c.valor}</p>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{c.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto max-w-7xl px-4 py-14">
         <div className="max-w-3xl">

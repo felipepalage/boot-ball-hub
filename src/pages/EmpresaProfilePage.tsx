@@ -11,6 +11,7 @@ import { empresaService } from '@/services/empresaService';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { formatDate } from '@/lib/formatters';
 import { slugify } from '@/lib/slugify';
+import { usePageSeo } from '@/hooks/usePageSeo';
 
 const getInitials = (value: string) =>
   value
@@ -61,6 +62,13 @@ const EmpresaProfilePage = () => {
 
   const destaqueHistorico = useMemo(() => historico?.slice(0, 8) ?? [], [historico]);
   const canEdit = empresaId === currentUser?.empresaId;
+
+  usePageSeo({
+    title: empresa?.nome,
+    description: empresa
+      ? `${empresa.nome} no Boleiroffice — times, jogos e histórico no futebol corporativo entre empresas.`
+      : undefined,
+  });
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-24 pt-6">
