@@ -174,7 +174,7 @@ const RegisterPage = () => {
           </form>
 
           <p className="mt-4 text-center text-xs text-white/45">
-            CPF nao e aceito neste cadastro. Use um CNPJ valido da empresa para continuar.
+            Cadastro exclusivo para empresas com CNPJ válido — gratuito no período de lançamento.
           </p>
           <p className="mt-6 text-center text-sm text-white/60">
             Ja tem conta?{' '}

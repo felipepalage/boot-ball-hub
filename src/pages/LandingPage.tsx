@@ -1,6 +1,6 @@
 ﻿import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, Building2, ShieldCheck, Trophy, Target, CalendarCheck, Newspaper, Users, Share2 } from 'lucide-react';
+import { ArrowRight, Building2, ShieldCheck, Trophy, Target, CalendarCheck, Newspaper, Users, Share2, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
 import { TeamCrest } from '@/components/TeamCrest';
@@ -86,12 +86,14 @@ const LandingPage = () => {
 
         <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:pt-20">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.34em] text-red-200/80">Futebol corporativo brasileiro</p>
+            <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-red-200">
+              <Lock size={13} /> Acesso exclusivo para empresas · por CNPJ
+            </span>
             <h1 className="mt-5 max-w-4xl text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-              A plataforma para empresas marcarem jogos e disputarem ranking.
+              A liga fechada do futebol corporativo.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">
-              O Boleiroffice organiza amistosos entre empresas, valida resultados, registra artilheiros e cria uma vitrine publica para times corporativos. O cadastro e empresarial e feito por CNPJ.
+              Sua empresa entra por CNPJ, marca amistosos com outras empresas, valida os resultados e disputa o ranking corporativo. Uma vitrine pública só para quem joga de verdade — gratuito no período de lançamento.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link to="/register" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5">
