@@ -13,6 +13,7 @@ import { DesafioStatus } from '@/types';
 import { toast } from 'sonner';
 import { fireConfetti } from '@/lib/celebrate';
 import { MissoesSemana } from '@/components/MissoesSemana';
+import { OnboardingChecklist } from '@/components/OnboardingChecklist';
 
 const HomePage = () => {
   const currentUser = authService.getCurrentUser();
@@ -131,6 +132,7 @@ const HomePage = () => {
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-24 pt-6">
+      <OnboardingChecklist temTime={meusTimes.length > 0} />
       <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_22%),linear-gradient(135deg,rgba(196,30,58,0.18),rgba(8,8,8,0.96))] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.35)]">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>

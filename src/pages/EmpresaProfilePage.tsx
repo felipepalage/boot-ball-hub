@@ -1,13 +1,14 @@
 ﻿import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Building2, MapPin, Share2, Upload } from 'lucide-react';
+import { ArrowLeft, Building2, MapPin, Share2, Upload, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SkeletonCard } from '@/components/SkeletonCard';
 import { authService } from '@/services/authService';
 import { desafioService } from '@/services/desafioService';
 import { empresaService } from '@/services/empresaService';
+import { conviteService } from '@/services/conviteService';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { formatDate } from '@/lib/formatters';
 import { slugify } from '@/lib/slugify';
@@ -70,6 +71,17 @@ const EmpresaProfilePage = () => {
       : undefined,
   });
 
+  const convidarMembro = async () => {
+    try {
+      const { token } = await conviteService.criar();
+      const url = `${window.location.origin}/entrar-empresa/${token}`;
+      await navigator.clipboard.writeText(url);
+      toast.success('Link de convite copiado! Válido por 7 dias — envie para o colega.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Nao foi possivel gerar o convite.'));
+    }
+  };
+
   return (
     <div className="mx-auto max-w-5xl px-4 pb-24 pt-6">
       <button
@@ -110,6 +122,14 @@ const EmpresaProfilePage = () => {
               >
                 <Share2 size={16} /> Compartilhar
               </button>
+              {canEdit && (
+                <button
+                  onClick={convidarMembro}
+                  className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
+                >
+                  <UserPlus size={16} /> Convidar membro
+                </button>
+              )}
               {canEdit && (
                 <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15">
                   <Upload size={16} />

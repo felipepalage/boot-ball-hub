@@ -1,8 +1,9 @@
 ﻿import { Link, useLocation } from 'react-router-dom';
-import { Home, Newspaper, Trophy, Users, CalendarDays, Target, Volleyball, BarChart3 } from 'lucide-react';
+import { Home, Newspaper, Trophy, Users, CalendarDays, Target, Volleyball, BarChart3, Swords } from 'lucide-react';
 
 const navItems = [
   { to: '/app', icon: Home, label: 'Convites' },
+  { to: '/adversarios', icon: Swords, label: 'Rivais' },
   { to: '/times', icon: Users, label: 'Times' },
   { to: '/amistoso', icon: Volleyball, label: 'Amistoso' },
   { to: '/agenda', icon: CalendarDays, label: 'Agenda' },

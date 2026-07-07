@@ -12,6 +12,8 @@ import { authService } from '@/services/authService';
 // Rotas carregadas sob demanda (code-splitting) — reduz o bundle inicial.
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const SobrePage = lazy(() => import('./pages/SobrePage'));
+const AdversariosPage = lazy(() => import('./pages/AdversariosPage'));
+const RegistrarMembroPage = lazy(() => import('./pages/RegistrarMembroPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const TimesPage = lazy(() => import('./pages/TimesPage'));
 const FeedPage = lazy(() => import('./pages/FeedPage'));
@@ -108,6 +110,7 @@ const App = () => (
           <Route path="/termos" element={<TermosPage />} />
           <Route path="/privacidade" element={<PrivacidadePage />} />
           <Route path="/sobre" element={<SobrePage />} />
+          <Route path="/entrar-empresa/:token" element={<RegistrarMembroPage />} />
           <Route path="/r/:token" element={<PublicoRachaoPage />} />
           <Route path="/times/:timeId/:slug?" element={<TimeProfilePage />} />
           <Route path="/empresas/:empresaId/:slug?" element={<EmpresaProfilePage />} />
@@ -124,6 +127,7 @@ const App = () => (
           <Route path="/jogadores/:id/perfil" element={<AppLayout><JogadorPerfilPage /></AppLayout>} />
           <Route path="/artilharia" element={<PublicAppLayout><ArtilhariaPage /></PublicAppLayout>} />
           <Route path="/amistoso" element={<ProtectedRoute><AppLayout><AmistosoPage /></AppLayout></ProtectedRoute>} />
+          <Route path="/adversarios" element={<ProtectedRoute><AppLayout><AdversariosPage /></AppLayout></ProtectedRoute>} />
           <Route path="/estatisticas" element={<ProtectedRoute><AppLayout><EstatisticasPage /></AppLayout></ProtectedRoute>} />
           <Route path="/agenda" element={<ProtectedRoute><AppLayout><CalendarioPage /></AppLayout></ProtectedRoute>} />
           <Route path="/temporadas" element={<ProtectedRoute><AppLayout><TemporadasPage /></AppLayout></ProtectedRoute>} />
