@@ -24,7 +24,7 @@ const SobrePage = () => {
     <main className="min-h-dvh bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-white/5 bg-black/40 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Link to="/"><img src={logo} alt="Boleiroffice" className="h-14 w-auto" /></Link>
+          <Link to="/"><img src={logo} alt="Boleiroffice" className="h-20 w-auto sm:h-24" /></Link>
           <nav className="flex items-center gap-2">
             <Link to="/ranking" className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:text-foreground">Ranking</Link>
             <Link to="/register" className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white transition hover:opacity-90">Cadastrar empresa</Link>
