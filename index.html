@@ -29,6 +29,10 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://boleiroffice.com.br/" />
 
+    <!-- Google Search Console: cole aqui o código do método "Tag HTML".
+         (Alternativa sem alterar código: método "Provedor de nome de domínio" via TXT na Locaweb.) -->
+    <meta name="google-site-verification" content="COLE_AQUI_O_CODIGO_DO_SEARCH_CONSOLE" />
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Boleiroffice" />
@@ -39,7 +43,9 @@
       property="og:description"
       content="Marque amistosos entre empresas, confirme resultados e suba no ranking corporativo. Cadastro por CNPJ."
     />
-    <meta property="og:image" content="https://boleiroffice.com.br/logo.png" />
+    <meta property="og:image" content="https://boleiroffice.com.br/og-boleiroffice.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -48,7 +54,7 @@
       name="twitter:description"
       content="Amistosos corporativos com fluxo real de desafio, resultado confirmado pelas duas equipes e ranking atualizado."
     />
-    <meta name="twitter:image" content="https://boleiroffice.com.br/logo.png" />
+    <meta name="twitter:image" content="https://boleiroffice.com.br/og-boleiroffice.png" />
 
     <!-- Dados estruturados para o Google -->
     <script type="application/ld+json">
@@ -65,6 +71,16 @@
           "logo": "https://boleiroffice.com.br/logo.png"
         }
       }
+    </script>
+
+    <!-- Google Analytics (GA4): troque G-XXXXXXXXXX pelo seu "ID de métricas" do GA4.
+         Enquanto estiver com o placeholder, não envia nada. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
     </script>
   </head>
 

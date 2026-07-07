@@ -1,10 +1,26 @@
 ﻿import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, Building2, ShieldCheck, Trophy, Target, CalendarCheck, Newspaper, Users } from 'lucide-react';
+import { ArrowRight, Building2, ShieldCheck, Trophy, Target, CalendarCheck, Newspaper, Users, Share2 } from 'lucide-react';
+import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
 import { TeamCrest } from '@/components/TeamCrest';
 import { rankingService } from '@/services/rankingService';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
+const compartilhar = async () => {
+  const url = 'https://boleiroffice.com.br';
+  const dados = { title: 'Boleiroffice', text: 'Futebol corporativo entre empresas — marque amistosos e dispute o ranking.', url };
+  try {
+    if (navigator.share) {
+      await navigator.share(dados);
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast.success('Link copiado! É só colar e compartilhar.');
+    }
+  } catch {
+    /* usuário cancelou o compartilhamento */
+  }
+};
 
 const benefits = [
   { icon: Building2, title: 'Cadastro empresarial por CNPJ', text: 'Cada empresa entra com CNPJ valido, perfil publico e times corporativos vinculados.' },
@@ -45,6 +61,7 @@ const LandingPage = () => {
           <nav className="hidden items-center gap-6 text-sm font-semibold text-white/64 md:flex">
             <Link to="/ranking" className="transition hover:text-white">Ranking</Link>
             <Link to="/artilharia" className="transition hover:text-white">Artilharia</Link>
+            <Link to="/sobre" className="transition hover:text-white">Sobre</Link>
             <Link to="/login" className="transition hover:text-white">Entrar</Link>
           </nav>
           <Link to="/register" className="rounded-xl bg-primary px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:opacity-90">
@@ -68,6 +85,9 @@ const LandingPage = () => {
               <Link to="/ranking" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/14 bg-white/5 px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:bg-white/10">
                 Ver ranking geral
               </Link>
+              <button type="button" onClick={compartilhar} aria-label="Compartilhar" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/14 bg-white/5 px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:bg-white/10">
+                <Share2 size={18} /> Compartilhar
+              </button>
             </div>
           </div>
 

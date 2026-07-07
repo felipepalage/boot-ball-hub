@@ -11,6 +11,7 @@ import { authService } from '@/services/authService';
 
 // Rotas carregadas sob demanda (code-splitting) — reduz o bundle inicial.
 const LandingPage = lazy(() => import('./pages/LandingPage'));
+const SobrePage = lazy(() => import('./pages/SobrePage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const TimesPage = lazy(() => import('./pages/TimesPage'));
 const FeedPage = lazy(() => import('./pages/FeedPage'));
@@ -106,6 +107,7 @@ const App = () => (
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/termos" element={<TermosPage />} />
           <Route path="/privacidade" element={<PrivacidadePage />} />
+          <Route path="/sobre" element={<SobrePage />} />
           <Route path="/r/:token" element={<PublicoRachaoPage />} />
           <Route path="/times/:timeId/:slug?" element={<TimeProfilePage />} />
           <Route path="/empresas/:empresaId/:slug?" element={<EmpresaProfilePage />} />
