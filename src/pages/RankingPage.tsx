@@ -4,7 +4,7 @@ import { Trophy } from 'lucide-react';
 import { TeamCrest } from '@/components/TeamCrest';
 import { rankingService, type RankingPeriodo } from '@/services/rankingService';
 
-type RankingTab = 'times' | 'artilheiros' | 'reputacao';
+type RankingTab = 'times' | 'artilheiros' | 'reputacao' | 'indicacoes';
 
 const PERIODOS: { id: RankingPeriodo; label: string }[] = [
   { id: 'geral', label: 'Geral' },
@@ -81,6 +81,12 @@ const RankingPage = () => {
     enabled: tab === 'reputacao',
   });
 
+  const indicacoesQuery = useQuery({
+    queryKey: ['ranking-indicacoes'],
+    queryFn: rankingService.getIndicacoes,
+    enabled: tab === 'indicacoes',
+  });
+
   const dataset = tab === 'times' ? rankingQuery.data : tab === 'artilheiros' ? scorersQuery.data : reputationQuery.data;
   const isLoading = tab === 'times' ? rankingQuery.isLoading : tab === 'artilheiros' ? scorersQuery.isLoading : reputationQuery.isLoading;
 
@@ -99,6 +105,7 @@ const RankingPage = () => {
             { id: 'times', label: 'Times' },
             { id: 'artilheiros', label: 'Artilheiros' },
             { id: 'reputacao', label: 'Reputacao' },
+            { id: 'indicacoes', label: 'Indicações' },
           ].map((item) => (
             <button
               key={item.id}
@@ -122,6 +129,31 @@ const RankingPage = () => {
         </div>
       </div>
 
+      {tab === 'indicacoes' && (
+        <div className="rounded-[2rem] border border-white/10 bg-card/80 p-3 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
+          <div className="space-y-2">
+            {indicacoesQuery.isLoading && Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-[68px] animate-pulse rounded-2xl bg-secondary/40" />
+            ))}
+            {!indicacoesQuery.isLoading && (indicacoesQuery.data?.length ?? 0) === 0 && (
+              <p className="py-10 text-center text-sm text-muted-foreground">Ninguém indicou empresas ainda. Compartilhe seu link de indicação (botão "Indicar empresa" no perfil da empresa).</p>
+            )}
+            {indicacoesQuery.data?.map((item, i) => (
+              <div key={item.empresaId} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/20 p-3">
+                <div className="w-6 shrink-0 text-center text-sm font-black text-primary">{i + 1}</div>
+                <div className="min-w-0 flex-1"><p className="truncate font-bold text-foreground">{item.empresaNome}</p></div>
+                <div className="shrink-0 pl-1 text-right">
+                  <p className="text-2xl font-black tabular-nums text-primary">{item.total}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">indicações</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tab !== 'indicacoes' && (
+      <>
       <div className="rounded-[2rem] border border-white/10 bg-card/80 p-3 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
         <div className="space-y-2">
           {isLoading && Array.from({ length: 6 }).map((_, index) => (
@@ -187,6 +219,8 @@ const RankingPage = () => {
         <span>Pagina {dataset?.page ?? page} de {Math.max(dataset?.totalPages ?? 1, 1)}</span>
         <button onClick={() => setPage((prev) => prev + 1)} disabled={Boolean(dataset) && page >= (dataset?.totalPages ?? 1)} className="rounded-xl border border-white/10 px-3 py-2 font-semibold text-foreground disabled:opacity-40">Proxima</button>
       </div>
+      </>
+      )}
     </div>
   );
 };

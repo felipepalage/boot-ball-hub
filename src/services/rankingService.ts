@@ -10,9 +10,19 @@ export interface EstatisticasPublicas {
   gols: number;
 }
 
+export interface IndicadorItem {
+  empresaId: string;
+  empresaNome: string;
+  total: number;
+}
+
 export const rankingService = {
   getEstatisticas: async () => {
     const { data } = await api.get<EstatisticasPublicas>('/ranking/estatisticas');
+    return data;
+  },
+  getIndicacoes: async () => {
+    const { data } = await api.get<IndicadorItem[]>('/ranking/indicacoes');
     return data;
   },
   getAll: async (page = 1, pageSize = 20, periodo: RankingPeriodo = 'geral') => {

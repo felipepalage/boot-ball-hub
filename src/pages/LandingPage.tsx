@@ -4,6 +4,7 @@ import { ArrowRight, Building2, ShieldCheck, Trophy, Target, CalendarCheck, News
 import { toast } from 'sonner';
 import logo from '@/assets/logo.png';
 import { TeamCrest } from '@/components/TeamCrest';
+import { InstallPWAButton } from '@/components/InstallPWAButton';
 import { rankingService } from '@/services/rankingService';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
@@ -112,6 +113,7 @@ const LandingPage = () => {
               <button type="button" onClick={compartilhar} aria-label="Compartilhar" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/14 bg-white/5 px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:bg-white/10">
                 <Share2 size={18} /> Compartilhar
               </button>
+              <InstallPWAButton />
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -55,6 +55,8 @@ const inputClass =
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const indicadoPorEmpresaId = searchParams.get('ref') || undefined;
   const isAuthenticated = authService.isAuthenticated();
 
   const {
@@ -92,7 +94,7 @@ const RegisterPage = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await authService.register({ ...data, empresaLogoUrl: data.empresaLogoUrl || undefined });
+      await authService.register({ ...data, empresaLogoUrl: data.empresaLogoUrl || undefined, indicadoPorEmpresaId });
       toast.success('Conta criada com sucesso.');
       navigate('/app');
     } catch (error) {

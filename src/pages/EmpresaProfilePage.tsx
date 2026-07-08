@@ -1,7 +1,7 @@
 ﻿import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Building2, MapPin, Share2, Upload, UserPlus } from 'lucide-react';
+import { ArrowLeft, Building2, MapPin, Share2, Upload, UserPlus, Gift } from 'lucide-react';
 import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SkeletonCard } from '@/components/SkeletonCard';
@@ -128,6 +128,17 @@ const EmpresaProfilePage = () => {
                   className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
                 >
                   <UserPlus size={16} /> Convidar membro
+                </button>
+              )}
+              {canEdit && (
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/register?ref=${empresaId}`);
+                    toast.success('Link de indicação copiado! Empresas que entrarem por ele contam pra você.');
+                  }}
+                  className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
+                >
+                  <Gift size={16} /> Indicar empresa
                 </button>
               )}
               {canEdit && (

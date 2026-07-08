@@ -227,6 +227,7 @@ export interface RegisterPayload {
   empresaBairro: string;
   empresaCidade: string;
   empresaLogoUrl?: string;
+  indicadoPorEmpresaId?: string;
 }
 
 export interface CreateDesafioPayload {
