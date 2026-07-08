@@ -77,11 +77,15 @@ const LandingPage = () => {
             <Link to="/ranking" className="transition hover:text-white">Ranking</Link>
             <Link to="/artilharia" className="transition hover:text-white">Artilharia</Link>
             <Link to="/sobre" className="transition hover:text-white">Sobre</Link>
-            <Link to="/login" className="transition hover:text-white">Entrar</Link>
           </nav>
-          <Link to="/register" className="rounded-xl bg-primary px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:opacity-90">
-            Cadastrar empresa
-          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link to="/login" className="rounded-xl border border-white/14 bg-white/5 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:bg-white/10">
+              Entrar
+            </Link>
+            <Link to="/register" className="rounded-xl bg-primary px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:opacity-90">
+              Cadastrar empresa
+            </Link>
+          </div>
         </header>
 
         <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:pt-20">
@@ -95,9 +99,12 @@ const LandingPage = () => {
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">
               Sua empresa entra por CNPJ, marca amistosos com outras empresas, valida os resultados e disputa o ranking corporativo. Uma vitrine pública só para quem joga de verdade — gratuito no período de lançamento.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link to="/register" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5">
                 Cadastrar por CNPJ <ArrowRight size={18} />
+              </Link>
+              <Link to="/login" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:bg-white/15">
+                Entrar
               </Link>
               <Link to="/ranking" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/14 bg-white/5 px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:bg-white/10">
                 Ver ranking geral
