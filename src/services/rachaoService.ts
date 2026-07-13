@@ -24,10 +24,12 @@ export interface RachaoPublico {
   token: string;
   empresaNome: string;
   horarioEvento: string;
+  jogadoresPorTime: number;
   numeroTimes: number;
   sorteioFeito: boolean;
   confirmados: RachaoConfirmacao[];
   times: TimeSorteado[];
+  excedentes: string[];
 }
 
 export const rachaoService = {
@@ -45,6 +47,10 @@ export const rachaoService = {
   },
   confirmar: async (token: string, nome: string, empresa: string) => {
     const { data } = await api.post<RachaoPublico>(`/rachao/publico/${token}/confirmar`, { nome, empresa });
+    return data;
+  },
+  desistir: async (token: string, nome: string, empresa: string) => {
+    const { data } = await api.post<RachaoPublico>(`/rachao/publico/${token}/desistir`, { nome, empresa });
     return data;
   },
 };
