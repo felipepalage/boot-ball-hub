@@ -31,8 +31,8 @@ export interface RachaoPublico {
 }
 
 export const rachaoService = {
-  criar: async (horarioEvento: string, numeroTimes: number) => {
-    const { data } = await api.post<RachaoEvento>('/rachao/eventos', { horarioEvento, numeroTimes });
+  criar: async (horarioEvento: string) => {
+    const { data } = await api.post<RachaoEvento>('/rachao/eventos', { horarioEvento });
     return data;
   },
   getAtivo: async (): Promise<RachaoEvento | null> => {

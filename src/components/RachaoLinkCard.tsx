@@ -13,12 +13,11 @@ export const RachaoLinkCard = () => {
   const { data: evento } = useQuery({ queryKey: ['rachao', 'ativo'], queryFn: rachaoService.getAtivo, refetchInterval: 20000 });
 
   const [horario, setHorario] = useState('');
-  const [numeroTimes, setNumeroTimes] = useState(2);
   const [copiado, setCopiado] = useState(false);
   const [novoForm, setNovoForm] = useState(false);
 
   const criar = useMutation({
-    mutationFn: () => rachaoService.criar(new Date(horario).toISOString(), numeroTimes),
+    mutationFn: () => rachaoService.criar(new Date(horario).toISOString()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rachao', 'ativo'] });
       setNovoForm(false);
@@ -52,30 +51,17 @@ export const RachaoLinkCard = () => {
           }}
         >
           <p className="text-sm text-muted-foreground">
-            Crie um link pra galera confirmar presença. Os times são sorteados automaticamente ~2h antes.
+            Crie um link pra galera confirmar presença. Os times (6 por time, fut7) são sorteados
+            automaticamente ~2h antes — quem sobrar fica pro próximo.
           </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-xs uppercase tracking-widest text-muted-foreground">Horário do jogo</label>
-              <input
-                type="datetime-local"
-                value={horario}
-                onChange={(e) => setHorario(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-2.5 text-white focus:border-primary focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs uppercase tracking-widest text-muted-foreground">Nº de times</label>
-              <select
-                value={numeroTimes}
-                onChange={(e) => setNumeroTimes(Number(e.target.value))}
-                className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-2.5 text-white focus:border-primary focus:outline-none"
-              >
-                {[2, 3, 4, 5, 6].map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
-            </div>
+          <div>
+            <label className="mb-1 block text-xs uppercase tracking-widest text-muted-foreground">Horário do jogo</label>
+            <input
+              type="datetime-local"
+              value={horario}
+              onChange={(e) => setHorario(e.target.value)}
+              className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-2.5 text-white focus:border-primary focus:outline-none"
+            />
           </div>
           <div className="flex gap-2">
             <button
@@ -103,7 +89,7 @@ export const RachaoLinkCard = () => {
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-            <span className="text-muted-foreground">🕐 {fmtHorario(evento!.horarioEvento)} · {evento!.numeroTimes} times</span>
+            <span className="text-muted-foreground">🕐 {fmtHorario(evento!.horarioEvento)} · sorteio automático (6 por time)</span>
             <span className={`rounded-full px-3 py-1 text-xs font-bold ${evento!.sorteioFeito ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
               {evento!.sorteioFeito ? 'Times sorteados' : 'Aguardando (sorteio ~2h antes)'}
             </span>
