@@ -556,20 +556,15 @@ const GolModal = ({
   const [autor, setAutor] = useState('');
   const [assist, setAssist] = useState('');
 
-  const timeNome = timeNumero === 1 ? partida.time1Nome : partida.time2Nome;
-
-  // Jogadores do time selecionado (casando pelo nome do time sorteado).
-  // Se o time não foi sorteado / não bater, cai pro elenco completo como fallback.
-  const jogadoresDoTime = useMemo(() => {
-    const t = times.find((x) => x.nome === timeNome);
-    return t && t.jogadores.length ? t.jogadores : jogadores.map((j) => j.nome);
-  }, [times, timeNome, jogadores]);
-
-  // Ao trocar de time, limpa a seleção (o jogador é de outro time).
-  useEffect(() => {
-    setAutor('');
-    setAssist('');
-  }, [timeNumero]);
+  // Todos os jogadores disponíveis = todos os times sorteados + elenco cadastrado.
+  // Precisa listar todo mundo (não só o time da partida) porque quem entra de
+  // substituto pode ser de outro time e ainda assim marcar gol/dar assistência.
+  const todosJogadores = useMemo(() => {
+    const nomes = new Set<string>();
+    times.forEach((t) => t.jogadores.forEach((n) => nomes.add(n)));
+    jogadores.forEach((j) => nomes.add(j.nome));
+    return Array.from(nomes).sort((a, b) => a.localeCompare(b));
+  }, [times, jogadores]);
 
   const selectClass =
     'mb-4 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-2.5 text-white focus:border-primary focus:outline-none';
@@ -600,7 +595,7 @@ const GolModal = ({
         <label className="mb-1 block text-xs uppercase tracking-widest text-white/40">Quem fez o gol</label>
         <select value={autor} onChange={(e) => setAutor(e.target.value)} className={selectClass}>
           <option value="">Selecione o jogador</option>
-          {jogadoresDoTime.map((n) => (
+          {todosJogadores.map((n) => (
             <option key={n} value={n}>
               {n}
             </option>
@@ -610,7 +605,7 @@ const GolModal = ({
         <label className="mb-1 block text-xs uppercase tracking-widest text-white/40">Assistência (opcional)</label>
         <select value={assist} onChange={(e) => setAssist(e.target.value)} className={selectClass}>
           <option value="">Ninguém / não registrar</option>
-          {jogadoresDoTime
+          {todosJogadores
             .filter((n) => n !== autor)
             .map((n) => (
               <option key={n} value={n}>
