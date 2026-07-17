@@ -7,6 +7,7 @@ import logo from '@/assets/logo.png';
 import { rachaoService } from '@/services/rachaoService';
 import { getApiErrorMessage } from '@/lib/api-error';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { TimesSorteadosCard } from '@/components/TimesSorteadosCard';
 
 const fmtHorario = (iso: string) =>
   new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -215,6 +216,14 @@ const PublicoRachaoPage = () => {
                 {copiado ? <Check size={16} /> : <Copy size={16} />}
                 {copiado ? 'Copiado!' : 'Copiar escalacao (WhatsApp)'}
               </button>
+            )}
+
+            {/* Imagem dos times pra postar no grupo */}
+            {data.times.length > 0 && (
+              <div className="rounded-[2rem] border border-white/10 bg-black/30 p-5">
+                <p className="mb-4 text-center text-xs uppercase tracking-widest text-white/40">Imagem pra compartilhar</p>
+                <TimesSorteadosCard times={data.times} empresaNome={data.empresaNome} legenda={fmtHorario(data.horarioEvento)} />
+              </div>
             )}
           </div>
         )}

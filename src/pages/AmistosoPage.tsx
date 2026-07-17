@@ -10,6 +10,7 @@ import { useAmistosoLive } from '@/hooks/useAmistosoLive';
 import { fireConfetti, playGoalSound } from '@/lib/celebrate';
 import { VitoriaAmistosoOverlay } from '@/components/VitoriaAmistosoOverlay';
 import { RachaoLinkCard } from '@/components/RachaoLinkCard';
+import { TimesSorteadosCard } from '@/components/TimesSorteadosCard';
 
 type Tab = 'geral' | 'times' | 'rachao' | 'pagamentos';
 
@@ -214,7 +215,8 @@ const TimesTab = () => {
     );
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2">
       {times.map((t) => (
         <div key={t.id} className="rounded-3xl border border-white/10 bg-white/5 p-5">
           <div className="mb-3 flex items-center gap-2">
@@ -231,6 +233,12 @@ const TimesTab = () => {
           </ul>
         </div>
       ))}
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+        <p className="mb-4 text-center text-xs uppercase tracking-widest text-white/40">Imagem pra compartilhar no grupo</p>
+        <TimesSorteadosCard times={times.map((t) => ({ nome: t.nome, jogadores: t.jogadores }))} />
+      </div>
     </div>
   );
 };
